@@ -7,7 +7,9 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
+    "@repo/types": "workspace:*",
     "@hono/node-server": "^1.19.0",
+    "@hono/zod-validator": "^0.7.2",
     "dotenv": "^17.2.1",
     "drizzle-orm": "^0.44.5",
     "hono": "^4.9.5",
