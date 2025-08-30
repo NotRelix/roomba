@@ -4,7 +4,7 @@
     "rootDir": "src",
     "baseUrl": ".",
     "paths": {
-      "@repo/types": ["./src"]
+      "@repo/shared": ["./src"]
     }
   },
   "include": ["src"],

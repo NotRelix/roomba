@@ -26,6 +26,9 @@ importers:
       '@hono/zod-validator':
         specifier: ^0.7.2
         version: 0.7.2(hono@4.9.5)(zod@4.1.5)
+      '@repo/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@repo/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -171,6 +174,19 @@ importers:
         specifier: ^8.40.0
         version: 8.40.0(eslint@9.34.0)(typescript@5.9.2)
 
+  packages/shared:
+    dependencies:
+      drizzle-orm:
+        specifier: ^0.44.5
+        version: 0.44.5(@types/pg@8.15.5)(pg@8.16.3)
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+
   packages/types:
     dependencies:
       zod:
@@ -181,7 +197,7 @@ importers:
         specifier: workspace:*
         version: link:../typescript-config
       typescript:
-        specifier: latest
+        specifier: 5.9.2
         version: 5.9.2
 
   packages/typescript-config: {}
@@ -1993,6 +2009,7 @@ packages:
   typescript@5.9.2:
     resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
     engines: {node: '>=14.17'}
+    hasBin: true
 
   unbox-primitive@1.1.0:
     resolution: {integrity: sha512-nWJ91DjeOkej/TA8pXQ3myruKpKEYgqvpw9lz4OPHj/NWFNluYrjbz9j01CJ8yKQd2g4jFoOkINCTW2I5LEEyw==}
