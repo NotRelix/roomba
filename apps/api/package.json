@@ -9,8 +9,9 @@
   "dependencies": {
     "@hono/node-server": "^1.19.0",
     "@hono/zod-validator": "^0.7.2",
-    "@repo/types": "workspace:*",
     "@repo/shared": "workspace:*",
+    "@repo/types": "workspace:*",
+    "bcrypt-ts": "^7.1.0",
     "dotenv": "^17.2.1",
     "drizzle-orm": "^0.44.5",
     "hono": "^4.9.5",

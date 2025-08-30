@@ -2,6 +2,7 @@ import { createFactory } from "hono/factory";
 import { UserValidator } from "@repo/types/user";
 import { registerDb } from "../db/query.js";
 import type { InsertUser } from "@repo/shared/types";
+import { hash } from "bcrypt-ts";
 
 const factory = createFactory();
 
@@ -9,6 +10,8 @@ export const registerHandler = factory.createHandlers(async (c) => {
   try {
     const body = await c.req.json();
     const result = UserValidator.safeParse(body);
+    const salt = 10;
+
     if (!result.success) {
       return c.json(
         {
@@ -18,6 +21,7 @@ export const registerHandler = factory.createHandlers(async (c) => {
         400
       );
     }
+
     if (body.password !== body.confirmPassword) {
       return c.json(
         {
@@ -27,13 +31,16 @@ export const registerHandler = factory.createHandlers(async (c) => {
         400
       );
     }
+
+    let hashedPassword = await hash(body.password, salt);
     const newUser: InsertUser = {
       firstName: body.firstName,
       lastName: body.lastName,
       username: body.username,
       email: body.email,
-      password: body.password,
+      password: hashedPassword,
     };
+
     const insertUserResult = await registerDb(newUser);
     return c.json(
       {
