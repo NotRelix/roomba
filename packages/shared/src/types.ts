@@ -1,4 +1,4 @@
 import { usersTable } from "./schema.js";
 
-export type UserSelect = typeof usersTable.$inferSelect;
-export type UserInsert = typeof usersTable.$inferInsert;
+export type SelectUser = typeof usersTable.$inferSelect;
+export type InsertUser = typeof usersTable.$inferInsert;
