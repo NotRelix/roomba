@@ -2,6 +2,8 @@ import { loginValidator } from "@repo/types/user";
 import { createFactory } from "hono/factory";
 import { getUsernameDb } from "../db/query.js";
 import { compare } from "bcrypt-ts";
+import { sign } from "hono/jwt";
+import "dotenv/config"
 
 const factory = createFactory();
 
@@ -34,10 +36,19 @@ export const loginHandler = factory.createHandlers(async (c) => {
       return c.json(errorMessage, 401);
     }
 
+    const payload = {
+      id: user.id,
+      sub: user.username,
+      exp: Math.floor(Date.now() / 1000) + 60 * 5, // 60 sec x 5 min = 5 minutes
+    };
+    const secret = process.env.JWT_SECRET!;
+    const token = await sign(payload, secret);
+
     return c.json(
       {
         success: true,
         messages: ["Successfully logged in"],
+        token: token,
       },
       200
     );
