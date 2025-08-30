@@ -1,16 +1,16 @@
 import { createFactory } from "hono/factory";
-import { UserValidator } from "@repo/types/user";
+import { registerValidator } from "@repo/types/user";
 import { getEmailDb, getUsernameDb, registerDb } from "../db/query.js";
 import type { InsertUser } from "@repo/shared/types";
-import { hash } from "bcrypt-ts";
+import { genSalt, hash } from "bcrypt-ts";
 
 const factory = createFactory();
 
 export const registerHandler = factory.createHandlers(async (c) => {
   try {
     const body = await c.req.json();
-    const result = UserValidator.safeParse(body);
-    const salt = 10;
+    const result = registerValidator.safeParse(body);
+    const salt = await genSalt(10);
 
     if (!result.success) {
       return c.json(
