@@ -3,6 +3,7 @@ import { registerValidator } from "@repo/types/user";
 import { getEmailDb, getUsernameDb, registerDb } from "../db/query.js";
 import type { InsertUser } from "@repo/shared/types";
 import { genSalt, hash } from "bcrypt-ts";
+import { signToken } from "@repo/helpers/token";
 
 const factory = createFactory();
 
@@ -74,12 +75,14 @@ export const registerHandler = factory.createHandlers(async (c) => {
       );
     }
 
+    const token = await signToken(insertUserResult);
     const { password, ...safeUser } = insertUserResult;
     return c.json(
       {
         success: true,
         messages: ["Successfully registered user"],
         user: safeUser,
+        token: token,
       },
       201
     );
