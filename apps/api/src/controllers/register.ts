@@ -42,11 +42,22 @@ export const registerHandler = factory.createHandlers(async (c) => {
     };
 
     const insertUserResult = await registerDb(newUser);
+    if (!insertUserResult) {
+      return c.json(
+        {
+          success: false,
+          messages: ["Failed to register user"],
+        },
+        500
+      );
+    }
+
+    const { password, ...safeUser } = insertUserResult;
     return c.json(
       {
         success: true,
         messages: ["Successfully registered user"],
-        user: insertUserResult,
+        user: safeUser,
       },
       201
     );
