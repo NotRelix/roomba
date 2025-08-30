@@ -1,0 +1,18 @@
+{
+  "name": "@repo/helpers",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "dependencies": {
+    "@repo/shared": "workspace:*",
+    "dotenv": "^17.2.1",
+    "hono": "^4.9.5"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^24.3.0",
+    "typescript": "5.9.2"
+  }
+}
