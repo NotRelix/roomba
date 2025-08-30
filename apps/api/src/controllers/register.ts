@@ -18,6 +18,15 @@ export const registerHandler = factory.createHandlers(async (c) => {
         400
       );
     }
+    if (body.password !== body.confirmPassword) {
+      return c.json(
+        {
+          success: false,
+          messages: ["Password do not match"],
+        },
+        400
+      );
+    }
     const newUser: InsertUser = {
       firstName: body.firstName,
       lastName: body.lastName,
@@ -35,9 +44,12 @@ export const registerHandler = factory.createHandlers(async (c) => {
       201
     );
   } catch (err) {
-    return c.json({
-      success: false,
-      messages: ["Failed to register user"],
-    });
+    return c.json(
+      {
+        success: false,
+        messages: ["Failed to register user"],
+      },
+      500
+    );
   }
 });

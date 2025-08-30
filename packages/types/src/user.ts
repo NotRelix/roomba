@@ -28,4 +28,8 @@ export const UserValidator = z.object({
     .string()
     .min(8, "Password must be at least 8 characters")
     .max(255, "Password must be under 255 characters"),
+  confirmPassword: z
+    .string()
+    .min(8, "Confirm password must be at least 8 characters")
+    .max(255, "Confirm password must be under 255 characters"),
 });
