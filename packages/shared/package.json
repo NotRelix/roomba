@@ -6,10 +6,12 @@
     "./*": "./src/*.ts"
   },
   "dependencies": {
+    "dotenv": "^17.2.1",
     "drizzle-orm": "^0.44.5"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
+    "drizzle-kit": "^0.31.4",
     "typescript": "5.9.2"
   }
 }
