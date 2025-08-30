@@ -1,6 +1,6 @@
 import { createFactory } from "hono/factory";
 import { UserValidator } from "@repo/types/user";
-import { registerDb } from "../db/query.js";
+import { getEmailDb, getUsernameDb, registerDb } from "../db/query.js";
 import type { InsertUser } from "@repo/shared/types";
 import { hash } from "bcrypt-ts";
 
@@ -17,6 +17,28 @@ export const registerHandler = factory.createHandlers(async (c) => {
         {
           success: false,
           messages: result.error!.issues.map((message) => message.message),
+        },
+        400
+      );
+    }
+
+    const usernameExists = await getUsernameDb(body.username);
+    if (usernameExists) {
+      return c.json(
+        {
+          success: false,
+          messages: ["Username already exists"],
+        },
+        400
+      );
+    }
+
+    const emailExists = await getEmailDb(body.email);
+    if (emailExists) {
+      return c.json(
+        {
+          success: false,
+          messages: ["Email already exists"],
         },
         400
       );

@@ -23,7 +23,7 @@ export const UserValidator = z.object({
     .email()
     .trim()
     .min(1, "Email must not be empty")
-    .max(16, "Email must be under 16 characters"),
+    .toLowerCase(),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
