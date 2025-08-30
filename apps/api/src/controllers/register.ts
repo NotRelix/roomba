@@ -10,7 +10,7 @@ export const registerHandler = factory.createHandlers(async (c) => {
     return c.json(
       {
         success: false,
-        result: result.error!.issues,
+        messages: result.error!.issues.map((message) => message.message),
       },
       400
     );
@@ -18,7 +18,7 @@ export const registerHandler = factory.createHandlers(async (c) => {
   return c.json(
     {
       success: true,
-      result: result.data,
+      messages: ["Successfully registered user"],
     },
     201
   );
