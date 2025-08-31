@@ -30,6 +30,15 @@ export const registerValidator = z.object({
     .max(255, "Confirm password must be under 255 characters"),
 });
 
+export type registerType = {
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
 export const loginValidator = z.object({
   username: z
     .string()
