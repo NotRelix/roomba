@@ -22,7 +22,6 @@ describe("Register Handler test", () => {
       headers: new Headers({ "Content-Type": "application/json" }),
       body: JSON.stringify(data),
     });
-    console.log(res);
     expect(res.status).toBe(201);
   });
 });

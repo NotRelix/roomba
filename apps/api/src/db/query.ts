@@ -1,5 +1,5 @@
 import type { InsertUser, SelectUser } from "@repo/shared/types";
-import { db } from "./drizzle.js";
+import { db } from "@repo/shared/drizzle";
 import { usersTable } from "@repo/shared/schema";
 import { eq } from "drizzle-orm";
 
