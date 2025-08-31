@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { registerType } from "@repo/types/user";
 import { Hono } from "hono";
-import auth from "../src/routes/auth";
+import auth from "#routes/auth";
 
 const app = new Hono();
 app.route("/auth", auth);
