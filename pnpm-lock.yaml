@@ -217,6 +217,9 @@ importers:
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@types/node':
+        specifier: ^24.3.0
+        version: 24.3.0
       drizzle-kit:
         specifier: ^0.31.4
         version: 0.31.4
@@ -2876,7 +2879,7 @@ snapshots:
 
   '@types/pg@8.15.5':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 24.3.0
       pg-protocol: 1.10.3
       pg-types: 2.2.0
 
