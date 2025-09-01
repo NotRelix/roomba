@@ -1,10 +1,15 @@
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import type { registerType } from "@repo/types/user";
 import { Hono } from "hono";
 import auth from "#routes/auth";
+import { resetDb } from "@repo/helpers/db";
 
 const app = new Hono();
 app.route("/auth", auth);
+
+beforeAll(async () => {
+  await resetDb();
+});
 
 describe("Register Handler test", () => {
   it("should add user to database", async () => {
