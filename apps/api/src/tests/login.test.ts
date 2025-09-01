@@ -7,7 +7,6 @@ import { resetDb } from "@repo/helpers/db";
 const app = new Hono();
 app.route("/auth", auth);
 
-const url = "http://localhost:3000/auth";
 const dummyData: registerType = {
   firstName: "dummy",
   lastName: "dummy",
@@ -23,18 +22,16 @@ const data: loginType = {
 
 beforeAll(async () => {
   await resetDb();
-  const response = await app.request(`${url}/register`, {
+  await app.request("/auth/register", {
     method: "POST",
     headers: new Headers({ "Content-Type": "application/json" }),
     body: JSON.stringify(dummyData),
   });
-  const result = await response.json();
-  console.log(result);
 });
 
 describe("Login test", () => {
   it("should login user", async () => {
-    const response = await app.request(`${url}/login`, {
+    const response = await app.request("/auth/login", {
       method: "POST",
       headers: new Headers({ "Content-Type": "application/json" }),
       body: JSON.stringify(data),

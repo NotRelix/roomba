@@ -1,4 +1,4 @@
-import { afterAll, beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import type { registerType } from "@repo/types/user";
 import { Hono } from "hono";
 import auth from "#routes/auth";
@@ -7,7 +7,7 @@ import { resetDb } from "@repo/helpers/db";
 const app = new Hono();
 app.route("/auth", auth);
 
-const url = "http://localhost:3000/auth/register";
+const url = "/auth/register";
 const data: registerType[] = [
   {
     firstName: "dummy1",
