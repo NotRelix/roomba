@@ -1,13 +1,15 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import auth from "./routes/auth.js";
 import type { JwtVariables } from "hono/jwt";
+import auth from "#routes/auth";
+import messages from "#routes/messages";
 
 type Variables = JwtVariables;
 
 const app = new Hono<{ Variables: Variables }>();
 
 app.route("/auth", auth);
+app.route("/messages", messages);
 
 serve(
   {
