@@ -15,10 +15,6 @@ const dummyData: registerType = {
   password: "dummypassword",
   confirmPassword: "dummypassword",
 };
-const data: loginType = {
-  username: "dummy",
-  password: "dummypassword",
-};
 
 beforeAll(async () => {
   await resetDb();
@@ -31,6 +27,10 @@ beforeAll(async () => {
 
 describe("Login test", () => {
   it("should login user", async () => {
+    const data: loginType = {
+      username: "dummy",
+      password: "dummypassword",
+    };
     const response = await app.request("/auth/login", {
       method: "POST",
       headers: new Headers({ "Content-Type": "application/json" }),
@@ -40,5 +40,35 @@ describe("Login test", () => {
     expect(response.status).toBe(200);
     expect(result.success).toBeTruthy();
     expect(result.token).toBeDefined();
+  });
+
+  it("should prevent wrong username", async () => {
+    const data: loginType = {
+      username: "dummy1",
+      password: "dummypassword",
+    };
+    const response = await app.request("/auth/login", {
+      method: "POST",
+      headers: new Headers({ "Content-Type": "application/json" }),
+      body: JSON.stringify(data),
+    });
+    const result = await response.json();
+    expect(response.status).toBe(401);
+    expect(result.messages[0]).toBe("Invalid username or password");
+  });
+
+  it("should prevent wrong password", async () => {
+    const data: loginType = {
+      username: "dummy",
+      password: "dummypassword1",
+    };
+    const response = await app.request("/auth/login", {
+      method: "POST",
+      headers: new Headers({ "Content-Type": "application/json" }),
+      body: JSON.stringify(data),
+    });
+    const result = await response.json();
+    expect(response.status).toBe(401);
+    expect(result.messages[0]).toBe("Invalid username or password");
   });
 });
