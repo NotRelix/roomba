@@ -49,7 +49,7 @@ export const registerHandler = factory.createHandlers(async (c) => {
       return c.json(
         {
           success: false,
-          messages: ["Password do not match"],
+          messages: ["Passwords do not match"],
         },
         400
       );
