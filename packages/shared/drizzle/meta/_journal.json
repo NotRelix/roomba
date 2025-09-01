@@ -15,6 +15,13 @@
       "when": 1756565496042,
       "tag": "0001_busy_tyger_tiger",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1756713648464,
+      "tag": "0002_violet_the_phantom",
+      "breakpoints": true
     }
   ]
 }
