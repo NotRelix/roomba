@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import type { registerType } from "@repo/types/user";
 import { Hono } from "hono";
 import auth from "#routes/auth";
@@ -31,7 +31,7 @@ beforeEach(async () => {
   await resetDb();
 });
 
-describe("Register handler test", () => {
+describe("Register test", () => {
   it("should add user to database", async () => {
     const response = await app.request(url, {
       method: "POST",

@@ -1,5 +1,19 @@
 import z from "zod";
 
+export type registerType = {
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
+export type loginType = {
+  username: string;
+  password: string;
+};
+
 export const registerValidator = z.object({
   firstName: z
     .string()
@@ -29,15 +43,6 @@ export const registerValidator = z.object({
     .min(8, "Confirm password must be at least 8 characters")
     .max(255, "Confirm password must be under 255 characters"),
 });
-
-export type registerType = {
-  firstName: string;
-  lastName: string;
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
 
 export const loginValidator = z.object({
   username: z
