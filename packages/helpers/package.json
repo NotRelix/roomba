@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@repo/shared": "workspace:*",
+    "@repo/types": "workspace:*",
     "dotenv": "^17.2.1",
     "hono": "^4.9.5"
   },

@@ -188,9 +188,9 @@ importers:
       '@repo/shared':
         specifier: workspace:*
         version: link:../shared
-      api:
+      '@repo/types':
         specifier: workspace:*
-        version: link:../../apps/api
+        version: link:../types
       dotenv:
         specifier: ^17.2.1
         version: 17.2.1

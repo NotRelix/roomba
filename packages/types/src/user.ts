@@ -1,5 +1,11 @@
 import z from "zod";
 
+export type userPayloadType = {
+  id: number;
+  sub: string;
+  exp: number;
+};
+
 export type registerType = {
   firstName: string;
   lastName: string;
