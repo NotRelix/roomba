@@ -1,6 +1,5 @@
 import { createFactory } from "hono/factory";
-import { registerValidator } from "@repo/types/user";
-import { getEmailDb, getUsernameDb, registerDb } from "../db/query.js";
+import { registerDb } from "#db/query";
 import type { InsertUser } from "@repo/shared/types";
 import { genSalt, hash } from "bcrypt-ts";
 import { signToken } from "@repo/helpers/token";
@@ -10,50 +9,7 @@ const factory = createFactory();
 export const registerHandler = factory.createHandlers(async (c) => {
   try {
     const body = await c.req.json();
-    const result = registerValidator.safeParse(body);
     const salt = await genSalt(10);
-
-    if (!result.success) {
-      return c.json(
-        {
-          success: false,
-          messages: result.error!.issues.map((message) => message.message),
-        },
-        400
-      );
-    }
-
-    const usernameExists = await getUsernameDb(body.username);
-    if (usernameExists) {
-      return c.json(
-        {
-          success: false,
-          messages: ["Username already exists"],
-        },
-        400
-      );
-    }
-
-    const emailExists = await getEmailDb(body.email);
-    if (emailExists) {
-      return c.json(
-        {
-          success: false,
-          messages: ["Email already exists"],
-        },
-        400
-      );
-    }
-
-    if (body.password !== body.confirmPassword) {
-      return c.json(
-        {
-          success: false,
-          messages: ["Passwords do not match"],
-        },
-        400
-      );
-    }
 
     let hashedPassword = await hash(body.password, salt);
     const newUser: InsertUser = {
