@@ -1,4 +1,5 @@
-import { getAuthorDb } from "#db/query";
+import { createMessageDb, getAuthorDb } from "#db/query";
+import type { InsertMessage } from "@repo/shared/types";
 import { createMessageValidator } from "@repo/types/message";
 import { createFactory } from "hono/factory";
 
@@ -34,6 +35,11 @@ export const createMessageHandler = factory.createHandlers(async (c) => {
       );
     }
 
+    const newMessage: InsertMessage = {
+      message: body.message,
+      authorId: body.authorId,
+    };
+    const createMessageResult = await createMessageDb(newMessage);
     const { password, ...cleanAuthor } = author;
 
     return c.json(
@@ -41,6 +47,7 @@ export const createMessageHandler = factory.createHandlers(async (c) => {
         success: true,
         messages: ["Successfully created a message"],
         author: cleanAuthor,
+        message: createMessageResult,
       },
       201
     );

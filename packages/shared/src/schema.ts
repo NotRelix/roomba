@@ -25,7 +25,7 @@ export const messagesTable = pgTable("messages", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   message: text().notNull(),
   createdAt: timestamp({ withTimezone: true }).defaultNow(),
-  updatedAt: timestamp({ withTimezone: true }),
+  updatedAt: timestamp({ withTimezone: true }).defaultNow(),
   authorId: integer().notNull(),
 });
 

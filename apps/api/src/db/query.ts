@@ -1,6 +1,11 @@
-import type { InsertUser, SelectUser } from "@repo/shared/types";
+import type {
+  InsertMessage,
+  InsertUser,
+  SelectMessage,
+  SelectUser,
+} from "@repo/shared/types";
 import { db } from "@repo/shared/drizzle";
-import { usersTable } from "@repo/shared/schema";
+import { messagesTable, usersTable } from "@repo/shared/schema";
 import { eq } from "drizzle-orm";
 
 export const getUsernameDb = async (
@@ -36,4 +41,11 @@ export const getAuthorDb = async (
     .from(usersTable)
     .where(eq(usersTable.id, authorId));
   return user[0] ?? null;
+};
+
+export const createMessageDb = async (
+  newMessage: InsertMessage
+): Promise<SelectMessage | null> => {
+  const message = await db.insert(messagesTable).values(newMessage).returning();
+  return message[0] ?? null;
 };
