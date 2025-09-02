@@ -27,3 +27,13 @@ export const registerDb = async (
   const user = await db.insert(usersTable).values(newUser).returning();
   return user[0] ?? null;
 };
+
+export const getAuthorDb = async (
+  authorId: number
+): Promise<SelectUser | null> => {
+  const user = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.id, authorId));
+  return user[0] ?? null;
+};

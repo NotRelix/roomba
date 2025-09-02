@@ -1,3 +1,4 @@
+import { getAuthorDb } from "#db/query";
 import { createMessageValidator } from "@repo/types/message";
 import { createFactory } from "hono/factory";
 
@@ -22,10 +23,24 @@ export const createMessageHandler = factory.createHandlers(async (c) => {
       );
     }
 
+    const author = await getAuthorDb(body.authorId);
+    if (!author) {
+      return c.json(
+        {
+          success: false,
+          messages: ["Invalid user"],
+        },
+        400
+      );
+    }
+
+    const { password, ...cleanAuthor } = author;
+
     return c.json(
       {
         success: true,
         messages: ["Successfully created a message"],
+        author: cleanAuthor,
       },
       201
     );
