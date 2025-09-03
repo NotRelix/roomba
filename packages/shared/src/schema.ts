@@ -37,10 +37,10 @@ export const usersToRooms = pgTable(
   {
     userId: integer()
       .notNull()
-      .references(() => usersTable.id),
+      .references(() => usersTable.id, { onDelete: "cascade" }),
     roomId: integer()
       .notNull()
-      .references(() => roomsTable.id),
+      .references(() => roomsTable.id, { onDelete: "cascade" }),
   },
   (t) => [primaryKey({ columns: [t.userId, t.roomId] })]
 );
@@ -61,7 +61,9 @@ export const messagesTable = pgTable("messages", {
   message: text().notNull(),
   createdAt: timestamp({ withTimezone: true }).defaultNow(),
   updatedAt: timestamp({ withTimezone: true }).defaultNow(),
-  authorId: integer().notNull(),
+  authorId: integer()
+    .notNull()
+    .references(() => usersTable.id),
 });
 
 export const messagesRelations = relations(messagesTable, ({ one }) => ({

@@ -34,7 +34,7 @@ export const createRoomHandler = factory.createHandlers(
       );
     } catch (err) {
       return c.json(
-        { success: true, messages: ["Failed to create a room"] },
+        { success: false, messages: ["Failed to create a room"] },
         500
       );
     }
