@@ -12,6 +12,12 @@ export type userPayloadType = {
   exp: number;
 };
 
+export type registerEnv = {
+  Variables: {
+    validatedData: registerType;
+  };
+};
+
 export type registerType = {
   firstName: string;
   lastName: string;
