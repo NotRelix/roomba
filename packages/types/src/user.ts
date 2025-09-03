@@ -1,4 +1,5 @@
 import z from "zod";
+import { SelectUser } from "@repo/shared/types";
 
 export type userPayloadEnv = {
   Variables: {
@@ -9,6 +10,12 @@ export type userPayloadEnv = {
 export type registerEnv = {
   Variables: {
     validatedData: registerType;
+  };
+};
+
+export type loginEnv = {
+  Variables: {
+    user: SelectUser;
   };
 };
 
