@@ -1,16 +1,9 @@
-import { Hono } from "hono";
 import room from "#routes/rooms";
-import auth from "#routes/auth";
 import { beforeEach, describe, expect, it } from "vitest";
 import { resetDb } from "@repo/helpers/db";
 import type { registerType } from "@repo/types/user";
 import type { createRoomType } from "@repo/types/rooms";
-
-const roomApp = new Hono();
-roomApp.route("/rooms", room);
-
-const authApp = new Hono();
-authApp.route("/auth", auth);
+import { app } from "#index";
 
 const data: registerType = {
   firstName: "dummy1",
@@ -27,7 +20,7 @@ beforeEach(async () => {
 
 describe("Create rooms test", () => {
   it("should create a room", async () => {
-    const registerResponse = await authApp.request("/auth/register", {
+    const registerResponse = await app.request("/auth/register", {
       method: "POST",
       headers: new Headers({ "Content-Type": "application/json" }),
       body: JSON.stringify(data),
@@ -38,7 +31,7 @@ describe("Create rooms test", () => {
     const room: createRoomType = {
       name: "the best group chat",
     };
-    const response = await roomApp.request("/rooms", {
+    const response = await app.request("/rooms", {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -54,7 +47,7 @@ describe("Create rooms test", () => {
   });
 
   it("should create multiple rooms", async () => {
-    const registerResponse = await authApp.request("/auth/register", {
+    const registerResponse = await app.request("/auth/register", {
       method: "POST",
       headers: new Headers({ "Content-Type": "application/json" }),
       body: JSON.stringify(data),
@@ -68,7 +61,7 @@ describe("Create rooms test", () => {
     const room2: createRoomType = {
       name: "the 2nd best room",
     };
-    const response1 = await roomApp.request("/rooms", {
+    const response1 = await app.request("/rooms", {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -76,7 +69,7 @@ describe("Create rooms test", () => {
       }),
       body: JSON.stringify(room1),
     });
-    const response2 = await roomApp.request("/rooms", {
+    const response2 = await app.request("/rooms", {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -97,7 +90,7 @@ describe("Create rooms test", () => {
     const room: createRoomType = {
       name: "the best group chat",
     };
-    const response = await roomApp.request("/rooms", {
+    const response = await app.request("/rooms", {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -112,7 +105,7 @@ describe("Create rooms test", () => {
 
   it("should prevent fake tokens", async () => {
     const token = "thisisafaketoken";
-    const response = await roomApp.request("/rooms", {
+    const response = await app.request("/rooms", {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
