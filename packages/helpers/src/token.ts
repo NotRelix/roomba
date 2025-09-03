@@ -7,7 +7,7 @@ export const signToken = async (user: SelectUser) => {
   const payload: userPayloadType = {
     id: user.id,
     sub: user.username,
-    exp: Math.floor(Date.now() / 1000) + 60 * 60, // 60 sec x 60 min = 1 hour
+    exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24, // 60 sec x 60 min x 24 hours = 1 day
   };
   const secret = process.env.JWT_SECRET!;
   const token = await sign(payload, secret);
