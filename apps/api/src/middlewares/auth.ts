@@ -1,16 +1,10 @@
-import type { userPayloadType } from "@repo/types/user";
+import type { userPayloadEnv, userPayloadType } from "@repo/types/user";
 import type { Context, MiddlewareHandler, Next } from "hono";
 import { createMiddleware } from "hono/factory";
 import { verify } from "hono/jwt";
 
-type Env = {
-  Variables: {
-    user: userPayloadType;
-  };
-};
-
-export const useAuth = (): MiddlewareHandler<Env> => {
-  return createMiddleware<Env>(async (c: Context, next: Next) => {
+export const useAuth = (): MiddlewareHandler<userPayloadEnv> => {
+  return createMiddleware<userPayloadEnv>(async (c: Context, next: Next) => {
     const authHeader = c.req.header("Authorization");
 
     if (!authHeader || !authHeader.startsWith("Bearer")) {

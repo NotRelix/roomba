@@ -1,5 +1,11 @@
 import z from "zod";
 
+export type userPayloadEnv = {
+  Variables: {
+    user: userPayloadType;
+  };
+};
+
 export type userPayloadType = {
   id: number;
   sub: string;

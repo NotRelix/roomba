@@ -28,6 +28,7 @@ export const createMessageHandler = factory.createHandlers(
       }
 
       const user = c.get("user");
+      console.log({user});
       const author = await getAuthorDb(user.id);
       if (!author) {
         return c.json(
