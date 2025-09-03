@@ -6,11 +6,11 @@ import type { createMessageType } from "@repo/types/message";
 import { resetDb } from "@repo/helpers/db";
 import type { registerType } from "@repo/types/user";
 
-const messageRoute = new Hono();
-messageRoute.route("/messages", messages);
+const messageApp = new Hono();
+messageApp.route("/messages", messages);
 
-const authRoute = new Hono();
-authRoute.route("/auth", auth);
+const authApp = new Hono();
+authApp.route("/auth", auth);
 
 const data: registerType = {
   firstName: "dummy1",
@@ -27,7 +27,7 @@ beforeEach(async () => {
 
 describe("Create message test", () => {
   it("should create a message", async () => {
-    const registerResponse = await authRoute.request("/auth/register", {
+    const registerResponse = await authApp.request("/auth/register", {
       method: "POST",
       headers: new Headers({ "Content-Type": "application/json" }),
       body: JSON.stringify(data),
@@ -38,7 +38,7 @@ describe("Create message test", () => {
     const message: createMessageType = {
       message: "this is why we clash",
     };
-    const response = await messageRoute.request("/messages", {
+    const response = await messageApp.request("/messages", {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -54,7 +54,7 @@ describe("Create message test", () => {
   });
 
   it("should create multiple messages", async () => {
-    const registerResponse = await authRoute.request("/auth/register", {
+    const registerResponse = await authApp.request("/auth/register", {
       method: "POST",
       headers: new Headers({ "Content-Type": "application/json" }),
       body: JSON.stringify(data),
@@ -68,7 +68,7 @@ describe("Create message test", () => {
     const message2: createMessageType = {
       message: "for games like that",
     };
-    const response1 = await messageRoute.request("/messages", {
+    const response1 = await messageApp.request("/messages", {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -76,7 +76,7 @@ describe("Create message test", () => {
       }),
       body: JSON.stringify(message1),
     });
-    const response2 = await messageRoute.request("/messages", {
+    const response2 = await messageApp.request("/messages", {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -92,5 +92,43 @@ describe("Create message test", () => {
     expect(response2.status).toBe(201);
     expect(result1.message.message).toBe("this is why we clash");
     expect(result2.message.message).toBe("for games like that");
+  });
+
+  it("should prevent unauthenticated users", async () => {
+    const message: createMessageType = {
+      message: "shouldn't be able to send",
+    };
+    const response = await messageApp.request("/messages", {
+      method: "POST",
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+      body: JSON.stringify(message),
+    });
+    const result = await response.json();
+
+    expect(response.status).toBe(401);
+    expect(result.success).toBe(false);
+    expect(result.messages[0]).toBe("Unauthorized access");
+  });
+
+  it("should prevent fake tokens", async () => {
+    const fakeToken = "thisisafaketoken";
+    const message: createMessageType = {
+      message: "shouldn't be able to send",
+    };
+    const response = await messageApp.request("/messages", {
+      method: "POST",
+      headers: new Headers({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${fakeToken}`,
+      }),
+      body: JSON.stringify(message),
+    });
+    const result = await response.json();
+
+    expect(response.status).toBe(401);
+    expect(result.success).toBe(false);
+    expect(result.messages[0]).toBe("Invalid token");
   });
 });
