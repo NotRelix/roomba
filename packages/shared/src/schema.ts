@@ -26,6 +26,7 @@ export const usersRelations = relations(usersTable, ({ many }) => ({
 export const roomsTable = pgTable("rooms", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: varchar({ length: 255 }).notNull(),
+  createdAt: timestamp({ withTimezone: true }).defaultNow(),
 });
 
 export const roomsRelations = relations(roomsTable, ({ many }) => ({

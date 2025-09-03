@@ -1,0 +1,1 @@
+ALTER TABLE "rooms" ADD COLUMN "createdAt" timestamp with time zone DEFAULT now();
