@@ -1,9 +1,9 @@
-import { createRoomValidator } from "@repo/types/rooms";
+import { createRoomValidator, type createRoomEnv } from "@repo/types/rooms";
 import type { Context, MiddlewareHandler, Next } from "hono";
 import { createMiddleware } from "hono/factory";
 
-export const useValidateCreateRoom = (): MiddlewareHandler => {
-  return createMiddleware(async (c: Context, next: Next) => {
+export const useValidateCreateRoom = (): MiddlewareHandler<createRoomEnv> => {
+  return createMiddleware<createRoomEnv>(async (c: Context, next: Next) => {
     const body = await c.req.json();
     const result = createRoomValidator.safeParse(body);
 
@@ -17,6 +17,7 @@ export const useValidateCreateRoom = (): MiddlewareHandler => {
       );
     }
 
+    c.set("validatedData", result.data);
     await next();
   });
 };

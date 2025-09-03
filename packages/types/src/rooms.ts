@@ -1,5 +1,11 @@
 import z from "zod";
 
+export type createRoomEnv = {
+  Variables: {
+    validatedData: createRoomType;
+  };
+};
+
 export type createRoomType = z.infer<typeof createRoomValidator>;
 
 export const createRoomValidator = z.object({

@@ -1,12 +1,19 @@
 import type {
   InsertMessage,
+  InsertRoom,
   InsertUser,
   SelectMessage,
+  SelectRoom,
   SelectUser,
 } from "@repo/shared/types";
 import { db } from "@repo/shared/drizzle";
-import { messagesTable, usersTable } from "@repo/shared/schema";
-import { eq } from "drizzle-orm";
+import {
+  messagesTable,
+  roomsTable,
+  usersTable,
+  usersToRooms,
+} from "@repo/shared/schema";
+import { and, eq } from "drizzle-orm";
 
 export const getUsernameDb = async (
   username: string
@@ -41,6 +48,40 @@ export const getAuthorDb = async (
     .from(usersTable)
     .where(eq(usersTable.id, authorId));
   return user[0] ?? null;
+};
+
+export const createRoomDb = async (
+  userId: number,
+  body: InsertRoom
+): Promise<{ user: SelectUser; room: SelectRoom } | null> => {
+  const result = await db.transaction(async (tx) => {
+    const [room] = await tx.insert(roomsTable).values(body).returning();
+    const [insertResult] = await tx
+      .insert(usersToRooms)
+      .values({
+        roomId: room.id,
+        userId: userId,
+      })
+      .returning();
+
+    const [joined] = await tx
+      .select({
+        user: usersTable,
+        room: roomsTable,
+      })
+      .from(usersToRooms)
+      .where(
+        and(
+          eq(usersToRooms.userId, userId),
+          eq(usersToRooms.roomId, insertResult.roomId)
+        )
+      )
+      .innerJoin(usersTable, eq(usersToRooms.userId, usersTable.id))
+      .innerJoin(roomsTable, eq(usersToRooms.roomId, roomsTable.id));
+
+    return joined;
+  });
+  return result ?? null;
 };
 
 export const createMessageDb = async (
