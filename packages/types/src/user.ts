@@ -6,31 +6,21 @@ export type userPayloadEnv = {
   };
 };
 
-export type userPayloadType = {
-  id: number;
-  sub: string;
-  exp: number;
-};
-
 export type registerEnv = {
   Variables: {
     validatedData: registerType;
   };
 };
 
-export type registerType = {
-  firstName: string;
-  lastName: string;
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
+export type userPayloadType = {
+  id: number;
+  sub: string;
+  exp: number;
 };
 
-export type loginType = {
-  username: string;
-  password: string;
-};
+export type registerType = z.infer<typeof registerValidator>;
+
+export type loginType = z.infer<typeof loginValidator>;
 
 export const registerValidator = z.object({
   firstName: z
