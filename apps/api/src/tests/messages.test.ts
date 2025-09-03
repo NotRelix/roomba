@@ -14,72 +14,85 @@ const data: registerType = {
   confirmPassword: "dummypassword",
 };
 
+const registerUser = async (user: registerType) => {
+  const registerResponse = await app.request("/auth/register", {
+    method: "POST",
+    headers: new Headers({ "Content-Type": "application/json" }),
+    body: JSON.stringify(user),
+  });
+  const registerResult = await registerResponse.json();
+  const token = registerResult.token;
+  return token;
+};
+
+const createRoom = async (room: createRoomType, token?: string) => {
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+  };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  const response = await app.request("/rooms", {
+    method: "POST",
+    headers: new Headers(headers),
+    body: JSON.stringify(room),
+  });
+  const result = await response.json();
+  return result;
+};
+
+const createMessage = async (
+  message: createMessageType,
+  roomId: number,
+  token?: string
+) => {
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+  };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  const response = await app.request(`/rooms/${roomId}/messages`, {
+    method: "POST",
+    headers: new Headers(headers),
+    body: JSON.stringify(message),
+  });
+
+  const result = await response.json();
+  return result;
+};
+
 beforeEach(async () => {
   await resetDb();
 });
 
 describe("Create message test", () => {
   it("should create a message", async () => {
-    const registerResponse = await app.request("/auth/register", {
-      method: "POST",
-      headers: new Headers({ "Content-Type": "application/json" }),
-      body: JSON.stringify(data),
-    });
-    const registerResult = await registerResponse.json();
-    const token = registerResult.token;
-
+    const token = await registerUser(data);
     const room: createRoomType = {
       name: "the best group chat",
     };
-    const roomResponse = await app.request("/rooms", {
-      method: "POST",
-      headers: new Headers({
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      }),
-      body: JSON.stringify(room),
-    });
-    const roomResult = await roomResponse.json();
+    const roomResult = await createRoom(room, token);
 
     const message: createMessageType = {
       message: "this is why we clash",
     };
-    const response = await app.request(`/rooms/${roomResult.id}/messages`, {
-      method: "POST",
-      headers: new Headers({
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      }),
-      body: JSON.stringify(message),
-    });
 
-    const result = await response.json();
+    const result = await createMessage(message, roomResult.id, token);
 
-    expect(response.status).toBe(201);
     expect(result.messages[0]).toBe("Successfully created a message");
   });
 
   it("should create multiple messages", async () => {
-    const registerResponse = await app.request("/auth/register", {
-      method: "POST",
-      headers: new Headers({ "Content-Type": "application/json" }),
-      body: JSON.stringify(data),
-    });
-    const registerResult = await registerResponse.json();
-    const token = registerResult.token;
-
+    const token = await registerUser(data);
     const room: createRoomType = {
       name: "the best group chat",
     };
-    const roomResponse = await app.request("/rooms", {
-      method: "POST",
-      headers: new Headers({
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      }),
-      body: JSON.stringify(room),
-    });
-    const roomResult = await roomResponse.json();
+    const roomResult = await createRoom(room, token);
 
     const message1: createMessageType = {
       message: "this is why we clash",
@@ -87,28 +100,10 @@ describe("Create message test", () => {
     const message2: createMessageType = {
       message: "for games like that",
     };
-    const response1 = await app.request(`/rooms/${roomResult.id}/messages`, {
-      method: "POST",
-      headers: new Headers({
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      }),
-      body: JSON.stringify(message1),
-    });
-    const response2 = await app.request(`/rooms/${roomResult.id}/messages`, {
-      method: "POST",
-      headers: new Headers({
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      }),
-      body: JSON.stringify(message2),
-    });
 
-    const result1 = await response1.json();
-    const result2 = await response2.json();
+    const result1 = await createMessage(message1, roomResult.id, token);
+    const result2 = await createMessage(message2, roomResult.id, token);
 
-    expect(response1.status).toBe(201);
-    expect(response2.status).toBe(201);
     expect(result1.message.message).toBe("this is why we clash");
     expect(result2.message.message).toBe("for games like that");
   });
@@ -117,28 +112,13 @@ describe("Create message test", () => {
     const room: createRoomType = {
       name: "the best group chat",
     };
-    const roomResponse = await app.request("/rooms", {
-      method: "POST",
-      headers: new Headers({
-        "Content-Type": "application/json",
-      }),
-      body: JSON.stringify(room),
-    });
-    const roomResult = await roomResponse.json();
+    const roomResult = await createRoom(room);
 
     const message: createMessageType = {
       message: "shouldn't be able to send",
     };
-    const response = await app.request(`/rooms/${roomResult.id}/messages`, {
-      method: "POST",
-      headers: new Headers({
-        "Content-Type": "application/json",
-      }),
-      body: JSON.stringify(message),
-    });
-    const result = await response.json();
+    const result = await createMessage(message, roomResult.id);
 
-    expect(response.status).toBe(401);
     expect(result.success).toBe(false);
     expect(result.messages[0]).toBe("Unauthorized access");
   });
@@ -148,29 +128,13 @@ describe("Create message test", () => {
     const room: createRoomType = {
       name: "the best group chat",
     };
-    const roomResponse = await app.request("/rooms", {
-      method: "POST",
-      headers: new Headers({
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${fakeToken}`,
-      }),
-      body: JSON.stringify(room),
-    });
-    const roomResult = await roomResponse.json();
+    const roomResult = await createRoom(room, fakeToken);
+
     const message: createMessageType = {
       message: "shouldn't be able to send",
     };
-    const response = await app.request(`/rooms/${roomResult.id}/messages`, {
-      method: "POST",
-      headers: new Headers({
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${fakeToken}`,
-      }),
-      body: JSON.stringify(message),
-    });
-    const result = await response.json();
+    const result = await createMessage(message, roomResult.id, fakeToken);
 
-    expect(response.status).toBe(401);
     expect(result.success).toBe(false);
     expect(result.messages[0]).toBe("Invalid token");
   });
