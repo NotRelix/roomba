@@ -1,7 +1,7 @@
-import { createMessageDb, getAuthorDb } from "#db/query";
+import { createMessageDb } from "#db/query";
 import { useAuth } from "#middlewares/auth";
+import { useValidateCreateMessage } from "#middlewares/messages";
 import type { InsertMessage } from "@repo/shared/types";
-import { createMessageValidator } from "@repo/types/message";
 import { createFactory } from "hono/factory";
 
 const factory = createFactory();
@@ -12,32 +12,12 @@ export const getMessagesHandler = factory.createHandlers(async (c) => {
 
 export const createMessageHandler = factory.createHandlers(
   useAuth(),
+  useValidateCreateMessage(),
   async (c) => {
     try {
-      const body = await c.req.json();
-      const result = createMessageValidator.safeParse(body);
-
-      if (!result.success) {
-        return c.json(
-          {
-            success: false,
-            messages: result.error!.issues.map((message) => message.message),
-          },
-          400
-        );
-      }
-
       const user = c.get("user");
-      const author = await getAuthorDb(user.id);
-      if (!author) {
-        return c.json(
-          {
-            success: false,
-            messages: ["Invalid user"],
-          },
-          400
-        );
-      }
+      const body = c.get("validatedData");
+      const author = c.get("author");
 
       const newMessage: InsertMessage = {
         message: body.message,
