@@ -67,7 +67,7 @@ describe("Join rooms test", () => {
     expect(joinRoomResult.messages[0]).toBe("Invalid room ID");
   });
 
-  it("should not join an invalid room (number)", async () => {
+  it("should not join an invalid room (very big number)", async () => {
     const user1 = await registerUser(registerUser1);
     const user2 = await registerUser(registerUser2);
 
@@ -78,6 +78,19 @@ describe("Join rooms test", () => {
 
     expect(joinRoomResult.success).toBe(false);
     expect(joinRoomResult.messages[0]).toBe("Invalid room ID");
+  });
+
+  it("should not join an invalid room (number)", async () => {
+    const user1 = await registerUser(registerUser1);
+    const user2 = await registerUser(registerUser2);
+
+    await createRoom(room1, user1.token);
+
+    const invalidRoomId = 102093;
+    const joinRoomResult = await joinRoom(invalidRoomId, user2.token);
+
+    expect(joinRoomResult.success).toBe(false);
+    expect(joinRoomResult.messages[0]).toBe("Room doesn't exist");
   });
 
   it("should not join the same room", async () => {

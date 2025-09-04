@@ -3,7 +3,7 @@ import { app } from "#index";
 
 export const createMessage = async (
   message: createMessageType,
-  roomId: number,
+  roomId: number | string,
   token?: string
 ) => {
   const headers: HeadersInit = {

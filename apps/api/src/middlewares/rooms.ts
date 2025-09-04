@@ -10,14 +10,7 @@ export const useValidJoinRoom = (): MiddlewareHandler => {
     const user = c.get("user");
     const roomId = Number(c.req.param("roomId"));
 
-    if (roomId >= INT_MAX) {
-      return c.json({
-        success: false,
-        messages: ["Invalid room ID"],
-      });
-    }
-
-    if (isNaN(roomId)) {
+    if (roomId >= INT_MAX || isNaN(roomId)) {
       return c.json(
         {
           success: false,

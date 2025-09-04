@@ -126,4 +126,31 @@ describe("Create message test", () => {
     expect(messageResult2.author.username).toBe(registerUser2.username);
     expect(messageResult2.message.message).toBe(message2.message);
   });
+
+  it("should prevent sending messages on an invalid room ID (string)", async () => {
+    const { token } = await registerUser(registerUser1);
+    await createRoom(room1, token);
+    const invalidRoomId = "ABC";
+    const result = await createMessage(message1, invalidRoomId, token);
+
+    expect(result.success).toBe(false);
+  });
+
+  it("should prevent sending messages on an invalid room ID (very big number)", async () => {
+    const { token } = await registerUser(registerUser1);
+    await createRoom(room1, token);
+    const invalidRoomId = 1034982347978;
+    const result = await createMessage(message1, invalidRoomId, token);
+
+    expect(result.success).toBe(false);
+  });
+
+  it("should prevent sending messages on an invalid room ID (number)", async () => {
+    const { token } = await registerUser(registerUser1);
+    await createRoom(room1, token);
+    const invalidRoomId = 12300;
+    const result = await createMessage(message1, invalidRoomId, token);
+
+    expect(result.success).toBe(false);
+  });
 });

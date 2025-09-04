@@ -6,6 +6,8 @@ import {
 import type { Context, MiddlewareHandler, Next } from "hono";
 import { createMiddleware } from "hono/factory";
 
+const INT_MAX = 2 ** 31 - 1;
+
 export const useValidateCreateMessage =
   (): MiddlewareHandler<createMessageEnv> => {
     return createMiddleware<createMessageEnv>(
@@ -13,6 +15,16 @@ export const useValidateCreateMessage =
         const body = await c.req.json();
         const roomId = Number(c.req.param("roomId"));
         const result = createMessageValidator.safeParse(body);
+
+        if (roomId >= INT_MAX || isNaN(roomId)) {
+          return c.json(
+            {
+              success: false,
+              messages: ["Invalid room ID"],
+            },
+            400
+          );
+        }
 
         if (!result.success) {
           return c.json(
