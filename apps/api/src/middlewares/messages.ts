@@ -1,4 +1,4 @@
-import { getAuthorDb, getUserInRoom } from "#db/query";
+import { getAuthorDb, getUserInRoomDb } from "#db/query";
 import {
   createMessageValidator,
   type createMessageEnv,
@@ -36,7 +36,7 @@ export const useValidateCreateMessage =
           );
         }
 
-        const isUserJoined = await getUserInRoom(user.id, roomId);
+        const isUserJoined = await getUserInRoomDb(user.id, roomId);
         if (!isUserJoined) {
           return c.json(
             {

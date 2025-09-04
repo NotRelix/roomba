@@ -18,3 +18,20 @@ export const createRoom = async (room: createRoomType, token?: string) => {
   const result = await response.json();
   return result;
 };
+
+export const joinRoom = async (roomId: number, token?: string) => {
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+  };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  const response = await app.request(`/rooms/${roomId}/join`, {
+    method: "POST",
+    headers: new Headers(headers),
+  });
+  const result = await response.json();
+  return result;
+};

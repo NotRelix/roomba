@@ -51,7 +51,7 @@ export const getAuthorDb = async (
   return user[0] ?? null;
 };
 
-export const getUserInRoom = async (
+export const getUserInRoomDb = async (
   userId: number,
   roomId: number
 ): Promise<SelectUsersToRooms | null> => {
@@ -62,6 +62,39 @@ export const getUserInRoom = async (
       and(eq(usersToRooms.userId, userId), eq(usersToRooms.roomId, roomId))
     );
   return user ?? null;
+};
+
+export const getRoomDb = async (roomId: number): Promise<SelectRoom | null> => {
+  const [room] = await db
+    .select()
+    .from(roomsTable)
+    .where(eq(roomsTable.id, roomId));
+  return room ?? null;
+};
+
+export const joinRoomDb = async (
+  userId: number,
+  roomId: number
+): Promise<{ user: SelectUser; room: SelectRoom } | null> => {
+  await db
+    .insert(usersToRooms)
+    .values({
+      roomId: roomId,
+      userId: userId,
+    })
+    .returning();
+  const [joined] = await db
+    .select({
+      user: usersTable,
+      room: roomsTable,
+    })
+    .from(usersToRooms)
+    .where(
+      and(eq(usersToRooms.userId, userId), eq(usersToRooms.roomId, roomId))
+    )
+    .innerJoin(usersTable, eq(usersToRooms.userId, usersTable.id))
+    .innerJoin(roomsTable, eq(usersToRooms.roomId, roomsTable.id));
+  return joined ?? null;
 };
 
 export const createRoomDb = async (
