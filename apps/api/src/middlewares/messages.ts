@@ -11,8 +11,9 @@ export const useValidateCreateMessage =
     return createMiddleware<createMessageEnv>(
       async (c: Context, next: Next) => {
         const body = await c.req.json();
+        const roomId = Number(c.req.param("roomId"));
         const result = createMessageValidator.safeParse(body);
-        
+
         if (!result.success) {
           return c.json(
             {
@@ -35,7 +36,7 @@ export const useValidateCreateMessage =
           );
         }
 
-        const isUserJoined = await getUserInRoom(user.id);
+        const isUserJoined = await getUserInRoom(user.id, roomId);
         if (!isUserJoined) {
           return c.json(
             {

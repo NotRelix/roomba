@@ -52,12 +52,15 @@ export const getAuthorDb = async (
 };
 
 export const getUserInRoom = async (
-  userId: number
+  userId: number,
+  roomId: number
 ): Promise<SelectUsersToRooms | null> => {
   const [user] = await db
     .select()
     .from(usersToRooms)
-    .where(eq(usersToRooms.userId, userId));
+    .where(
+      and(eq(usersToRooms.userId, userId), eq(usersToRooms.roomId, roomId))
+    );
   return user ?? null;
 };
 
