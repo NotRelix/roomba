@@ -8,8 +8,7 @@ export const registerUser = async (user: registerType) => {
     body: JSON.stringify(user),
   });
   const registerResult = await registerResponse.json();
-  const token = registerResult.token;
-  return token;
+  return registerResult;
 };
 
 export const loginUser = async (user: loginType) => {

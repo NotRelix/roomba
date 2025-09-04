@@ -1,20 +1,11 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import type { createMessageType } from "@repo/types/message";
 import { resetDb } from "@repo/helpers/db";
-import type { registerType } from "@repo/types/user";
 import type { createRoomType } from "@repo/types/rooms";
 import { createMessage } from "#tests/helpers/messages";
 import { createRoom } from "#tests/helpers/rooms";
 import { registerUser } from "#tests/helpers/auth";
-
-const data: registerType = {
-  firstName: "dummy1",
-  lastName: "dummy1",
-  username: "dummy1",
-  email: "dummy1@gmail.com",
-  password: "dummypassword",
-  confirmPassword: "dummypassword",
-};
+import { user1 } from "#tests/data/user";
 
 beforeEach(async () => {
   await resetDb();
@@ -22,7 +13,7 @@ beforeEach(async () => {
 
 describe("Create message test", () => {
   it("should create a message", async () => {
-    const token = await registerUser(data);
+    const { token } = await registerUser(user1);
     const room: createRoomType = {
       name: "the best group chat",
     };
@@ -38,7 +29,7 @@ describe("Create message test", () => {
   });
 
   it("should create multiple messages", async () => {
-    const token = await registerUser(data);
+    const { token } = await registerUser(user1);
     const room: createRoomType = {
       name: "the best group chat",
     };
