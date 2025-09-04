@@ -3,7 +3,9 @@ import type { createMessageType } from "@repo/types/message";
 import { resetDb } from "@repo/helpers/db";
 import type { registerType } from "@repo/types/user";
 import type { createRoomType } from "@repo/types/rooms";
-import { app } from "#index";
+import { createMessage } from "#tests/helpers/messages";
+import { createRoom } from "#tests/helpers/rooms";
+import { registerUser } from "#tests/helpers/auth";
 
 const data: registerType = {
   firstName: "dummy1",
@@ -12,58 +14,6 @@ const data: registerType = {
   email: "dummy1@gmail.com",
   password: "dummypassword",
   confirmPassword: "dummypassword",
-};
-
-const registerUser = async (user: registerType) => {
-  const registerResponse = await app.request("/auth/register", {
-    method: "POST",
-    headers: new Headers({ "Content-Type": "application/json" }),
-    body: JSON.stringify(user),
-  });
-  const registerResult = await registerResponse.json();
-  const token = registerResult.token;
-  return token;
-};
-
-const createRoom = async (room: createRoomType, token?: string) => {
-  const headers: HeadersInit = {
-    "Content-Type": "application/json",
-  };
-
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
-  }
-
-  const response = await app.request("/rooms", {
-    method: "POST",
-    headers: new Headers(headers),
-    body: JSON.stringify(room),
-  });
-  const result = await response.json();
-  return result;
-};
-
-const createMessage = async (
-  message: createMessageType,
-  roomId: number,
-  token?: string
-) => {
-  const headers: HeadersInit = {
-    "Content-Type": "application/json",
-  };
-
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
-  }
-
-  const response = await app.request(`/rooms/${roomId}/messages`, {
-    method: "POST",
-    headers: new Headers(headers),
-    body: JSON.stringify(message),
-  });
-
-  const result = await response.json();
-  return result;
 };
 
 beforeEach(async () => {
