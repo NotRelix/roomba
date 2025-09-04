@@ -40,3 +40,17 @@ export const createRoomHandler = factory.createHandlers(
     }
   }
 );
+
+export const joinRoomHandler = factory.createHandlers(useAuth(), async (c) => {
+  try {
+    return c.json(
+      { success: true, messages: ["Successfully joined a room"] },
+      200
+    );
+  } catch (err) {
+    return c.json(
+      { success: false, messasges: ["Failed to join a room"] },
+      500
+    );
+  }
+});
