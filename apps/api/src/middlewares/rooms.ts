@@ -3,10 +3,29 @@ import { createRoomValidator, type createRoomEnv } from "@repo/types/rooms";
 import type { Context, MiddlewareHandler, Next } from "hono";
 import { createMiddleware } from "hono/factory";
 
+const INT_MAX = 2 ** 31 - 1;
+
 export const useValidJoinRoom = (): MiddlewareHandler => {
   return createMiddleware(async (c: Context, next: Next) => {
     const user = c.get("user");
     const roomId = Number(c.req.param("roomId"));
+
+    if (roomId >= INT_MAX) {
+      return c.json({
+        success: false,
+        messages: ["Invalid room ID"],
+      });
+    }
+
+    if (isNaN(roomId)) {
+      return c.json(
+        {
+          success: false,
+          messages: ["Invalid room ID"],
+        },
+        400
+      );
+    }
 
     const doesRoomExist = await getRoomDb(roomId);
     if (!doesRoomExist) {
