@@ -5,6 +5,7 @@ import type {
   SelectMessage,
   SelectRoom,
   SelectUser,
+  SelectUsersToRooms,
 } from "@repo/shared/types";
 import { db } from "@repo/shared/drizzle";
 import {
@@ -48,6 +49,16 @@ export const getAuthorDb = async (
     .from(usersTable)
     .where(eq(usersTable.id, authorId));
   return user[0] ?? null;
+};
+
+export const getUserInRoom = async (
+  userId: number
+): Promise<SelectUsersToRooms | null> => {
+  const [user] = await db
+    .select()
+    .from(usersToRooms)
+    .where(eq(usersToRooms.userId, userId));
+  return user ?? null;
 };
 
 export const createRoomDb = async (

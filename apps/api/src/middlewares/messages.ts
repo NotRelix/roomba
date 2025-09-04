@@ -1,4 +1,4 @@
-import { getAuthorDb } from "#db/query";
+import { getAuthorDb, getUserInRoom } from "#db/query";
 import {
   createMessageValidator,
   type createMessageEnv,
@@ -12,7 +12,7 @@ export const useValidateCreateMessage =
       async (c: Context, next: Next) => {
         const body = await c.req.json();
         const result = createMessageValidator.safeParse(body);
-
+        
         if (!result.success) {
           return c.json(
             {
@@ -32,6 +32,17 @@ export const useValidateCreateMessage =
               messages: ["Invalid user"],
             },
             400
+          );
+        }
+
+        const isUserJoined = await getUserInRoom(user.id);
+        if (!isUserJoined) {
+          return c.json(
+            {
+              success: false,
+              messages: ["Forbidden access"],
+            },
+            403
           );
         }
 
