@@ -1,6 +1,7 @@
-import type { registerType } from "@repo/types/user";
+import type { loginType, registerType } from "@repo/types/user";
 
-export const user1: registerType = {
+// Register User
+export const registerUser1: registerType = {
   firstName: "dummy1",
   lastName: "dummy1",
   username: "dummy1",
@@ -8,7 +9,7 @@ export const user1: registerType = {
   password: "dummypassword",
   confirmPassword: "dummypassword",
 };
-export const user2: registerType = {
+export const registerUser2: registerType = {
   firstName: "dummy2",
   lastName: "dummy2",
   username: "dummy2",
@@ -39,4 +40,22 @@ export const wrongPassword: registerType = {
   email: "dummy5@gmail.com",
   password: "dummypassword",
   confirmPassword: "wrongpassword",
+};
+
+// Login User
+export const loginUser1: loginType = {
+  username: "dummy1",
+  password: "dummypassword",
+};
+export const loginUser2: loginType = {
+  username: "dummy2",
+  password: "dummypassword",
+};
+export const loginWrongUsername: loginType = {
+  username: "wrongusername",
+  password: "dummypassword",
+};
+export const loginWrongPassword: loginType = {
+  username: "dummy1",
+  password: "wrongpassword",
 };

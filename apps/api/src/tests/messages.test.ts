@@ -5,7 +5,7 @@ import type { createRoomType } from "@repo/types/rooms";
 import { createMessage } from "#tests/helpers/messages";
 import { createRoom } from "#tests/helpers/rooms";
 import { registerUser } from "#tests/helpers/auth";
-import { user1 } from "#tests/data/user";
+import { registerUser1 } from "#tests/data/user";
 
 beforeEach(async () => {
   await resetDb();
@@ -13,7 +13,7 @@ beforeEach(async () => {
 
 describe("Create message test", () => {
   it("should create a message", async () => {
-    const { token } = await registerUser(user1);
+    const { token } = await registerUser(registerUser1);
     const room: createRoomType = {
       name: "the best group chat",
     };
@@ -29,7 +29,7 @@ describe("Create message test", () => {
   });
 
   it("should create multiple messages", async () => {
-    const { token } = await registerUser(user1);
+    const { token } = await registerUser(registerUser1);
     const room: createRoomType = {
       name: "the best group chat",
     };
