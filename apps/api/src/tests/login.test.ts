@@ -1,7 +1,7 @@
 import type { loginType, registerType } from "@repo/types/user";
 import { beforeAll, describe, expect, it } from "vitest";
 import { resetDb } from "@repo/helpers/db";
-import { app } from "#index";
+import { loginUser, registerUser } from "#tests/helpers/auth";
 
 const dummyData: registerType = {
   firstName: "dummy",
@@ -14,11 +14,7 @@ const dummyData: registerType = {
 
 beforeAll(async () => {
   await resetDb();
-  await app.request("/auth/register", {
-    method: "POST",
-    headers: new Headers({ "Content-Type": "application/json" }),
-    body: JSON.stringify(dummyData),
-  });
+  await registerUser(dummyData);
 });
 
 describe("Login test", () => {
@@ -27,13 +23,8 @@ describe("Login test", () => {
       username: "dummy",
       password: "dummypassword",
     };
-    const response = await app.request("/auth/login", {
-      method: "POST",
-      headers: new Headers({ "Content-Type": "application/json" }),
-      body: JSON.stringify(data),
-    });
-    const result = await response.json();
-    expect(response.status).toBe(200);
+
+    const result = await loginUser(data);
     expect(result.success).toBeTruthy();
     expect(result.token).toBeDefined();
   });
@@ -43,13 +34,8 @@ describe("Login test", () => {
       username: "dummy1",
       password: "dummypassword",
     };
-    const response = await app.request("/auth/login", {
-      method: "POST",
-      headers: new Headers({ "Content-Type": "application/json" }),
-      body: JSON.stringify(data),
-    });
-    const result = await response.json();
-    expect(response.status).toBe(401);
+
+    const result = await loginUser(data);
     expect(result.messages[0]).toBe("Invalid username or password");
   });
 
@@ -58,13 +44,8 @@ describe("Login test", () => {
       username: "dummy",
       password: "dummypassword1",
     };
-    const response = await app.request("/auth/login", {
-      method: "POST",
-      headers: new Headers({ "Content-Type": "application/json" }),
-      body: JSON.stringify(data),
-    });
-    const result = await response.json();
-    expect(response.status).toBe(401);
+
+    const result = await loginUser(data);
     expect(result.messages[0]).toBe("Invalid username or password");
   });
 });
