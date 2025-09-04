@@ -2,8 +2,8 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { resetDb } from "@repo/helpers/db";
 import { registerUser } from "#tests/helpers/auth";
 import { registerUser1 } from "#tests/data/user";
-import { createRoom } from "./helpers/rooms";
-import { room1, room2 } from "./data/rooms";
+import { createRoom } from "#tests/helpers/rooms";
+import { room1, room2 } from "#tests/data/rooms";
 
 beforeEach(async () => {
   await resetDb();
