@@ -7,8 +7,12 @@ import {
 } from "@repo/shared/schema";
 
 export const resetDb = async () => {
-  await db.delete(usersToRooms);
-  await db.delete(messagesTable);
-  await db.delete(usersTable);
-  await db.delete(roomsTable);
+  try {
+    await db.delete(usersToRooms);
+    await db.delete(messagesTable);
+    await db.delete(usersTable);
+    await db.delete(roomsTable);
+  } catch (err) {
+    console.error(err);
+  }
 };
