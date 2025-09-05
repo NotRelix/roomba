@@ -24,6 +24,7 @@ export const roomsTable = pgTable("rooms", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: varchar({ length: 255 }).notNull(),
   createdAt: timestamp({ withTimezone: true }).defaultNow(),
+  isPrivate: boolean().notNull().default(false),
 });
 
 export const usersToRooms = pgTable(

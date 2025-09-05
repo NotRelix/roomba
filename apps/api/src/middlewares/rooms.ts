@@ -31,6 +31,17 @@ export const useValidJoinRoom = (): MiddlewareHandler => {
       );
     }
 
+    const isRoomPrivate = doesRoomExist.isPrivate;
+    if (isRoomPrivate) {
+      return c.json(
+        {
+          success: false,
+          messages: ["Can't join a private room"],
+        },
+        400
+      );
+    }
+
     const isUserJoined = await getUserInRoomDb(user.id, roomId);
     if (isUserJoined) {
       return c.json(

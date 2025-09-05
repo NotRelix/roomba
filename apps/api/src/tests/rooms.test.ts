@@ -3,7 +3,7 @@ import { resetDb } from "@repo/helpers/db";
 import { registerUser } from "#tests/helpers/auth";
 import { registerUser1, registerUser2 } from "#tests/data/user";
 import { createRoom, joinRoom } from "#tests/helpers/rooms";
-import { room1, room2 } from "#tests/data/rooms";
+import { privateRoom1, room1, room2 } from "#tests/data/rooms";
 
 beforeEach(async () => {
   await resetDb();
@@ -108,5 +108,17 @@ describe("Join rooms test", () => {
     expect(joinRoomResult1.room.name).toBe(room1.name);
     expect(joinRoomResult2.success).toBe(false);
     expect(joinRoomResult2.messages[0]).toBe("User is already in the room");
+  });
+
+  it("should prevent users from joining a private room", async () => {
+    const user1 = await registerUser(registerUser1);
+    const user2 = await registerUser(registerUser2);
+
+    const roomResult = await createRoom(privateRoom1, user1.token);
+
+    const joinRoomResult = await joinRoom(roomResult.room.id, user2.token);
+
+    expect(joinRoomResult.success).toBe(false);
+    expect(joinRoomResult.messages[0]).toBe("Can't join a private room");
   });
 });
