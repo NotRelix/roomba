@@ -8,7 +8,8 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "reset:db": "pnpm --filter=@repo/helpers run reset:db"
+    "reset:db": "pnpm --filter=@repo/helpers run reset:db",
+    "reset:test:db": "pnpm --filter=@repo/helpers run reset:test:db"
   },
   "devDependencies": {
     "prettier": "^3.6.2",

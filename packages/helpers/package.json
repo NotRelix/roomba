@@ -6,7 +6,8 @@
     "./*": "./src/*.ts"
   },
   "scripts": {
-    "reset:db": "tsx ./src/resetDb"
+    "reset:db": "NODE_ENV=dev tsx ./src/resetDb",
+    "reset:test:db": "NODE_ENV=test tsx ./src/resetDb"
   },
   "dependencies": {
     "@repo/shared": "workspace:*",
