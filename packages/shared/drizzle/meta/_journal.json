@@ -57,6 +57,13 @@
       "when": 1757054339006,
       "tag": "0007_yellow_earthquake",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1757064815164,
+      "tag": "0008_many_swarm",
+      "breakpoints": true
     }
   ]
 }

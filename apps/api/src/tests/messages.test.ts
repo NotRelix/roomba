@@ -101,7 +101,7 @@ describe("Create message test", () => {
 
     const roomResult = await createRoom(room1, user1.token);
 
-    const joinRoomResult = await joinRoom(roomResult.room.id, user2.token);
+    await joinRoom(roomResult.room.id, user2.token);
 
     const messageResult1 = await createMessage(
       message1,
@@ -113,10 +113,6 @@ describe("Create message test", () => {
       roomResult.room.id,
       user2.token
     );
-
-    expect(joinRoomResult.success).toBeTruthy();
-    expect(joinRoomResult.messages[0]).toBe("Successfully joined a room");
-    expect(joinRoomResult.room.name).toBe(room1.name);
 
     expect(messageResult1.success).toBeTruthy();
     expect(messageResult1.author.username).toBe(registerUser1.username);

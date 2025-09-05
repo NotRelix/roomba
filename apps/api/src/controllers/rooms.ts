@@ -21,14 +21,13 @@ export const createRoomHandler = factory.createHandlers(
         );
       }
       const { password, ...safeUser } = createRoomResult.user;
-      const room = createRoomResult.room;
-
       return c.json(
         {
           success: true,
           messages: ["Successfully created a room"],
           user: safeUser,
-          room: room,
+          room: createRoomResult.room,
+          isAdmin: createRoomResult.isAdmin,
         },
         201
       );
@@ -61,13 +60,13 @@ export const joinRoomHandler = factory.createHandlers(
       }
 
       const { password, ...safeUser } = joinRoomResult.user;
-      const room = joinRoomResult.room;
       return c.json(
         {
           success: true,
           messages: ["Successfully joined a room"],
           user: safeUser,
-          room: room,
+          room: joinRoomResult.room,
+          isAdmin: joinRoomResult.isAdmin,
         },
         200
       );

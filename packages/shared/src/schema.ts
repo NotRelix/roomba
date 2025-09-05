@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import {
+  boolean,
   integer,
   pgTable,
   primaryKey,
@@ -34,6 +35,7 @@ export const usersToRooms = pgTable(
     roomId: integer()
       .notNull()
       .references(() => roomsTable.id, { onDelete: "cascade" }),
+    isAdmin: boolean().notNull().default(false),
   },
   (t) => [primaryKey({ columns: [t.userId, t.roomId] })]
 );

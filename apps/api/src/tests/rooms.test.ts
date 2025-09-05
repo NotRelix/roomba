@@ -16,6 +16,7 @@ describe("Create rooms test", () => {
 
     expect(result.success).toBe(true);
     expect(result.room.name).toBe("the best group chat");
+    expect(result.isAdmin).toBeTruthy();
   });
 
   it("should create multiple rooms", async () => {
@@ -52,6 +53,7 @@ describe("Join rooms test", () => {
 
     expect(joinRoomResult.success).toBeTruthy();
     expect(joinRoomResult.room.name).toBe(room1.name);
+    expect(joinRoomResult.isAdmin).toBe(false);
   });
 
   it("should not join an invalid room (string)", async () => {

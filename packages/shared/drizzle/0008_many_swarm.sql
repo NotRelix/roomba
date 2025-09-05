@@ -1,0 +1,1 @@
+ALTER TABLE "users_to_rooms" ADD COLUMN "isAdmin" boolean DEFAULT false NOT NULL;

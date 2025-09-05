@@ -75,7 +75,7 @@ export const getRoomDb = async (roomId: number): Promise<SelectRoom | null> => {
 export const joinRoomDb = async (
   userId: number,
   roomId: number
-): Promise<{ user: SelectUser; room: SelectRoom } | null> => {
+): Promise<{ user: SelectUser; room: SelectRoom; isAdmin: boolean } | null> => {
   await db
     .insert(usersToRooms)
     .values({
@@ -87,6 +87,7 @@ export const joinRoomDb = async (
     .select({
       user: usersTable,
       room: roomsTable,
+      isAdmin: usersToRooms.isAdmin,
     })
     .from(usersToRooms)
     .where(
@@ -100,7 +101,7 @@ export const joinRoomDb = async (
 export const createRoomDb = async (
   userId: number,
   body: InsertRoom
-): Promise<{ user: SelectUser; room: SelectRoom } | null> => {
+): Promise<{ user: SelectUser; room: SelectRoom; isAdmin: boolean } | null> => {
   const result = await db.transaction(async (tx) => {
     const [room] = await tx.insert(roomsTable).values(body).returning();
     const [insertResult] = await tx
@@ -108,6 +109,7 @@ export const createRoomDb = async (
       .values({
         roomId: room.id,
         userId: userId,
+        isAdmin: true,
       })
       .returning();
 
@@ -115,6 +117,7 @@ export const createRoomDb = async (
       .select({
         user: usersTable,
         room: roomsTable,
+        isAdmin: usersToRooms.isAdmin,
       })
       .from(usersToRooms)
       .where(
