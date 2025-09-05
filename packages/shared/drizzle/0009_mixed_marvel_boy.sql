@@ -1,0 +1,1 @@
+ALTER TABLE "rooms" ADD COLUMN "isPrivate" boolean DEFAULT false NOT NULL;
