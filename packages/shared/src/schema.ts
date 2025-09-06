@@ -49,6 +49,9 @@ export const messagesTable = pgTable("messages", {
   authorId: integer()
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),
+  roomId: integer()
+    .notNull()
+    .references(() => roomsTable.id, { onDelete: "cascade" }),
 });
 
 // Relations
@@ -59,6 +62,7 @@ export const usersRelations = relations(usersTable, ({ many }) => ({
 
 export const roomsRelations = relations(roomsTable, ({ many }) => ({
   usersToRooms: many(usersToRooms),
+  messages: many(messagesTable),
 }));
 
 export const usersToRoomsRelations = relations(usersToRooms, ({ one }) => ({
@@ -76,5 +80,9 @@ export const messagesRelations = relations(messagesTable, ({ one }) => ({
   author: one(usersTable, {
     fields: [messagesTable.authorId],
     references: [usersTable.id],
+  }),
+  room: one(roomsTable, {
+    fields: [messagesTable.roomId],
+    references: [roomsTable.id],
   }),
 }));
