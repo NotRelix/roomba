@@ -136,11 +136,21 @@ export const createRoomDb = async (
 
 export const getMessagesDb = async (
   roomId: number
-): Promise<SelectMessage[] | null> => {
+): Promise<
+  | {
+      message: SelectMessage;
+      author: SelectUser;
+    }[]
+  | null
+> => {
   const messages = await db
-    .select()
+    .select({
+      message: messagesTable,
+      author: usersTable,
+    })
     .from(messagesTable)
-    .where(eq(messagesTable.roomId, roomId));
+    .where(eq(messagesTable.roomId, roomId))
+    .innerJoin(usersTable, eq(messagesTable.authorId, usersTable.id));
   return messages ?? null;
 };
 
