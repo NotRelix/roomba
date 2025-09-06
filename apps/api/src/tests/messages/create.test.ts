@@ -101,7 +101,7 @@ describe("Create message test", () => {
 
     const roomResult = await createRoom(room1, user1.token);
 
-    await joinRoom(roomResult.room.id, user2.token);
+    const joinRoomResult = await joinRoom(roomResult.room.id, user2.token);
 
     const messageResult1 = await createMessage(
       message1,
@@ -117,10 +117,11 @@ describe("Create message test", () => {
     expect(messageResult1.success).toBeTruthy();
     expect(messageResult1.author.username).toBe(registerUser1.username);
     expect(messageResult1.message.message).toBe(message1.message);
-
+    
     expect(messageResult2.success).toBeTruthy();
     expect(messageResult2.author.username).toBe(registerUser2.username);
     expect(messageResult2.message.message).toBe(message2.message);
+    expect(joinRoomResult.room.id).toBe(roomResult.room.id);
   });
 
   it("should prevent sending messages on an invalid room ID (string)", async () => {

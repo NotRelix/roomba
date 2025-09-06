@@ -54,6 +54,7 @@ describe("Join rooms test", () => {
     expect(joinRoomResult.success).toBeTruthy();
     expect(joinRoomResult.room.name).toBe(room1.name);
     expect(joinRoomResult.isAdmin).toBe(false);
+    expect(joinRoomResult.room.id).toBe(roomResult.room.id);
   });
 
   it("should not join an invalid room (string)", async () => {

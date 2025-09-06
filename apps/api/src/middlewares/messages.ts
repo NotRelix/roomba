@@ -2,14 +2,15 @@ import { getAuthorDb, getUserInRoomDb } from "#db/query";
 import {
   createMessageValidator,
   type createMessageEnv,
+  type getMessagesEnv,
 } from "@repo/types/message";
 import type { Context, MiddlewareHandler, Next } from "hono";
 import { createMiddleware } from "hono/factory";
 
 const INT_MAX = 2 ** 31 - 1;
 
-export const useValidateGetMessages = (): MiddlewareHandler => {
-  return createMiddleware(async (c: Context, next: Next) => {
+export const useValidateGetMessages = (): MiddlewareHandler<getMessagesEnv> => {
+  return createMiddleware<getMessagesEnv>(async (c: Context, next: Next) => {
     const roomId = Number(c.req.param("roomId"));
 
     if (roomId >= INT_MAX || isNaN(roomId)) {
@@ -34,6 +35,7 @@ export const useValidateGetMessages = (): MiddlewareHandler => {
       );
     }
 
+    c.set("roomId", roomId);
     await next();
   });
 };
@@ -91,6 +93,7 @@ export const useValidateCreateMessage =
 
         c.set("validatedData", result.data);
         c.set("author", author);
+        c.set("roomId", roomId);
         await next();
       }
     );

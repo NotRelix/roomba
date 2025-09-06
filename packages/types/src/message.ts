@@ -1,10 +1,17 @@
 import { SelectUser } from "@repo/shared/types";
 import z from "zod";
 
+export type getMessagesEnv = {
+  Variables: {
+    roomId: number;
+  };
+};
+
 export type createMessageEnv = {
   Variables: {
     validatedData: createMessageType;
     author: SelectUser;
+    roomId: number;
   };
 };
 

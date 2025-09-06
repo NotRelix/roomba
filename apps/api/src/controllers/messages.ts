@@ -14,8 +14,14 @@ export const getMessagesHandler = factory.createHandlers(
   useValidateGetMessages(),
   async (c) => {
     try {
-      const roomId = Number(c.req.param("roomId"));
+      const roomId = c.get("roomId");
       const getMessagesResult = await getMessagesDb(roomId);
+
+      return c.json({
+        success: true,
+        messages: getMessagesResult,
+        notifs: ["Successfully fetched messages"],
+      });
     } catch (err) {
       return c.json({
         success: false,
@@ -33,7 +39,7 @@ export const createMessageHandler = factory.createHandlers(
       const user = c.get("user");
       const body = c.get("validatedData");
       const author = c.get("author");
-      const roomId = Number(c.req.param("roomId"));
+      const roomId = c.get("roomId");
 
       const newMessage: InsertMessage = {
         message: body.message,
