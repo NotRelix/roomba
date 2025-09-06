@@ -1,4 +1,4 @@
-import { createMessageDb } from "#db/query";
+import { createMessageDb, getMessagesDb } from "#db/query";
 import { useAuth } from "#middlewares/auth";
 import {
   useValidateCreateMessage,
@@ -13,7 +13,15 @@ export const getMessagesHandler = factory.createHandlers(
   useAuth(),
   useValidateGetMessages(),
   async (c) => {
-    return c.json("getting messages");
+    try {
+      const roomId = Number(c.req.param("roomId"));
+      const getMessagesResult = await getMessagesDb(roomId);
+    } catch (err) {
+      return c.json({
+        success: false,
+        notifs: ["Failed to get messages"],
+      });
+    }
   }
 );
 
@@ -25,10 +33,12 @@ export const createMessageHandler = factory.createHandlers(
       const user = c.get("user");
       const body = c.get("validatedData");
       const author = c.get("author");
+      const roomId = Number(c.req.param("roomId"));
 
       const newMessage: InsertMessage = {
         message: body.message,
         authorId: user.id,
+        roomId: roomId,
       };
       const createMessageResult = await createMessageDb(newMessage);
       const { password, ...cleanAuthor } = author;

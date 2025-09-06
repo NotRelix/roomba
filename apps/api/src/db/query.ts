@@ -134,6 +134,16 @@ export const createRoomDb = async (
   return result ?? null;
 };
 
+export const getMessagesDb = async (
+  roomId: number
+): Promise<SelectMessage[] | null> => {
+  const messages = await db
+    .select()
+    .from(messagesTable)
+    .where(eq(messagesTable.roomId, roomId));
+  return messages ?? null;
+};
+
 export const createMessageDb = async (
   newMessage: InsertMessage
 ): Promise<SelectMessage | null> => {
