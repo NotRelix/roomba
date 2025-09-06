@@ -13,7 +13,7 @@ export const loginHandler = factory.createHandlers(
       return c.json(
         {
           success: true,
-          messages: ["Successfully logged in"],
+          notifs: ["Successfully logged in"],
           token: token,
         },
         200
@@ -22,7 +22,7 @@ export const loginHandler = factory.createHandlers(
       return c.json(
         {
           success: false,
-          messages: ["Failed to login user"],
+          notifs: ["Failed to login user"],
         },
         500
       );

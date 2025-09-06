@@ -14,7 +14,7 @@ export const useValidJoinRoom = (): MiddlewareHandler => {
       return c.json(
         {
           success: false,
-          messages: ["Invalid room ID"],
+          notifs: ["Invalid room ID"],
         },
         400
       );
@@ -25,7 +25,7 @@ export const useValidJoinRoom = (): MiddlewareHandler => {
       return c.json(
         {
           success: false,
-          messages: ["Room doesn't exist"],
+          notifs: ["Room doesn't exist"],
         },
         404
       );
@@ -36,7 +36,7 @@ export const useValidJoinRoom = (): MiddlewareHandler => {
       return c.json(
         {
           success: false,
-          messages: ["Can't join a private room"],
+          notifs: ["Can't join a private room"],
         },
         400
       );
@@ -47,7 +47,7 @@ export const useValidJoinRoom = (): MiddlewareHandler => {
       return c.json(
         {
           success: false,
-          messages: ["User is already in the room"],
+          notifs: ["User is already in the room"],
         },
         400
       );
@@ -66,7 +66,7 @@ export const useValidateCreateRoom = (): MiddlewareHandler<createRoomEnv> => {
       return c.json(
         {
           success: false,
-          messages: result.error!.issues.map((message) => message.message),
+          notifs: result.error!.issues.map((message) => message.message),
         },
         400
       );

@@ -22,11 +22,11 @@ describe("Login test", () => {
 
   it("should prevent wrong username", async () => {
     const result = await loginUser(loginWrongUsername);
-    expect(result.messages[0]).toBe("Invalid username or password");
+    expect(result.notifs[0]).toBe("Invalid username or password");
   });
 
   it("should prevent wrong password", async () => {
     const result = await loginUser(loginWrongPassword);
-    expect(result.messages[0]).toBe("Invalid username or password");
+    expect(result.notifs[0]).toBe("Invalid username or password");
   });
 });

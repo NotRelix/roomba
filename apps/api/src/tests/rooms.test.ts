@@ -31,14 +31,14 @@ describe("Create rooms test", () => {
   it("should prevent unauthenticated users", async () => {
     const result = await createRoom(room1);
 
-    expect(result.messages[0]).toBe("Unauthorized access");
+    expect(result.notifs[0]).toBe("Unauthorized access");
   });
 
   it("should prevent fake tokens", async () => {
     const token = "thisisafaketoken";
     const roomResult = await createRoom(room1, token);
 
-    expect(roomResult.messages[0]).toBe("Invalid token");
+    expect(roomResult.notifs[0]).toBe("Invalid token");
   });
 });
 
@@ -66,7 +66,7 @@ describe("Join rooms test", () => {
     const joinRoomResult = await joinRoom(invalidRoomId, user2.token);
 
     expect(joinRoomResult.success).toBe(false);
-    expect(joinRoomResult.messages[0]).toBe("Invalid room ID");
+    expect(joinRoomResult.notifs[0]).toBe("Invalid room ID");
   });
 
   it("should not join an invalid room (very big number)", async () => {
@@ -79,7 +79,7 @@ describe("Join rooms test", () => {
     const joinRoomResult = await joinRoom(invalidRoomId, user2.token);
 
     expect(joinRoomResult.success).toBe(false);
-    expect(joinRoomResult.messages[0]).toBe("Invalid room ID");
+    expect(joinRoomResult.notifs[0]).toBe("Invalid room ID");
   });
 
   it("should not join an invalid room (number)", async () => {
@@ -92,7 +92,7 @@ describe("Join rooms test", () => {
     const joinRoomResult = await joinRoom(invalidRoomId, user2.token);
 
     expect(joinRoomResult.success).toBe(false);
-    expect(joinRoomResult.messages[0]).toBe("Room doesn't exist");
+    expect(joinRoomResult.notifs[0]).toBe("Room doesn't exist");
   });
 
   it("should not join the same room", async () => {
@@ -107,7 +107,7 @@ describe("Join rooms test", () => {
     expect(joinRoomResult1.success).toBeTruthy();
     expect(joinRoomResult1.room.name).toBe(room1.name);
     expect(joinRoomResult2.success).toBe(false);
-    expect(joinRoomResult2.messages[0]).toBe("User is already in the room");
+    expect(joinRoomResult2.notifs[0]).toBe("User is already in the room");
   });
 
   it("should prevent users from joining a private room", async () => {
@@ -119,6 +119,6 @@ describe("Join rooms test", () => {
     const joinRoomResult = await joinRoom(roomResult.room.id, user2.token);
 
     expect(joinRoomResult.success).toBe(false);
-    expect(joinRoomResult.messages[0]).toBe("Can't join a private room");
+    expect(joinRoomResult.notifs[0]).toBe("Can't join a private room");
   });
 });

@@ -29,6 +29,5 @@ describe("Get messages test", () => {
     const result = await getMessages(roomResult.room.id);
 
     expect(result.success).toBe(false);
-    console.log(result);
   });
 });

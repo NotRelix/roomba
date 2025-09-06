@@ -8,7 +8,7 @@ export const useAuth = (): MiddlewareHandler<userPayloadEnv> => {
     const authHeader = c.req.header("Authorization");
 
     if (!authHeader || !authHeader.startsWith("Bearer")) {
-      return c.json({ success: false, messages: ["Unauthorized access"] }, 401);
+      return c.json({ success: false, notifs: ["Unauthorized access"] }, 401);
     }
 
     try {
@@ -21,7 +21,7 @@ export const useAuth = (): MiddlewareHandler<userPayloadEnv> => {
       c.set("user", payload);
       await next();
     } catch (err) {
-      return c.json({ success: false, messages: ["Invalid token"] }, 401);
+      return c.json({ success: false, notifs: ["Invalid token"] }, 401);
     }
   });
 };

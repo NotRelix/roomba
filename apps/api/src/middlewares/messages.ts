@@ -16,7 +16,7 @@ export const useValidateGetMessages = (): MiddlewareHandler => {
       return c.json(
         {
           success: false,
-          messages: ["Invalid room ID"],
+          notifs: ["Invalid room ID"],
         },
         400
       );
@@ -28,7 +28,7 @@ export const useValidateGetMessages = (): MiddlewareHandler => {
       return c.json(
         {
           success: false,
-          messages: ["Forbidden access"],
+          notifs: ["Forbidden access"],
         },
         403
       );
@@ -50,7 +50,7 @@ export const useValidateCreateMessage =
           return c.json(
             {
               success: false,
-              messages: ["Invalid room ID"],
+              notifs: ["Invalid room ID"],
             },
             400
           );
@@ -60,7 +60,7 @@ export const useValidateCreateMessage =
           return c.json(
             {
               success: false,
-              messages: result.error!.issues.map((message) => message.message),
+              notifs: result.error!.issues.map((message) => message.message),
             },
             400
           );
@@ -72,7 +72,7 @@ export const useValidateCreateMessage =
           return c.json(
             {
               success: false,
-              messages: ["Invalid user"],
+              notifs: ["Invalid user"],
             },
             400
           );
@@ -83,7 +83,7 @@ export const useValidateCreateMessage =
           return c.json(
             {
               success: false,
-              messages: ["Forbidden access"],
+              notifs: ["Forbidden access"],
             },
             403
           );

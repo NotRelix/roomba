@@ -36,9 +36,9 @@ export const createMessageHandler = factory.createHandlers(
       return c.json(
         {
           success: true,
-          messages: ["Successfully created a message"],
           author: cleanAuthor,
           message: createMessageResult,
+          notifs: ["Successfully created a message"],
         },
         201
       );
@@ -46,7 +46,7 @@ export const createMessageHandler = factory.createHandlers(
       return c.json(
         {
           success: false,
-          messages: ["Failed to create message"],
+          notifs: ["Failed to create message"],
         },
         500
       );

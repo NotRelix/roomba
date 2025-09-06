@@ -12,7 +12,7 @@ export const useValidateRegister = (): MiddlewareHandler<registerEnv> => {
       return c.json(
         {
           success: false,
-          messages: result.error!.issues.map((message) => message.message),
+          notifs: result.error!.issues.map((message) => message.message),
         },
         400
       );
@@ -23,7 +23,7 @@ export const useValidateRegister = (): MiddlewareHandler<registerEnv> => {
       return c.json(
         {
           success: false,
-          messages: ["Username already exists"],
+          notifs: ["Username already exists"],
         },
         400
       );
@@ -34,7 +34,7 @@ export const useValidateRegister = (): MiddlewareHandler<registerEnv> => {
       return c.json(
         {
           success: false,
-          messages: ["Email already exists"],
+          notifs: ["Email already exists"],
         },
         400
       );
@@ -44,7 +44,7 @@ export const useValidateRegister = (): MiddlewareHandler<registerEnv> => {
       return c.json(
         {
           success: false,
-          messages: ["Passwords do not match"],
+          notifs: ["Passwords do not match"],
         },
         400
       );

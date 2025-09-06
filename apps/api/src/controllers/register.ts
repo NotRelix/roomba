@@ -28,7 +28,7 @@ export const registerHandler = factory.createHandlers(
         return c.json(
           {
             success: false,
-            messages: ["Failed to register user"],
+            notifs: ["Failed to register user"],
           },
           500
         );
@@ -39,9 +39,9 @@ export const registerHandler = factory.createHandlers(
       return c.json(
         {
           success: true,
-          messages: ["Successfully registered user"],
           user: safeUser,
           token: token,
+          notifs: ["Successfully registered user"],
         },
         201
       );
@@ -49,7 +49,7 @@ export const registerHandler = factory.createHandlers(
       return c.json(
         {
           success: false,
-          messages: ["Failed to register user"],
+          notifs: ["Failed to register user"],
         },
         500
       );

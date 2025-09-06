@@ -35,7 +35,7 @@ describe("Register test", () => {
     const result2 = await registerUser(duplicateUsername);
 
     expect(result1.user.username).toBe(registerUser1.username);
-    expect(result2.messages[0]).toBe("Username already exists");
+    expect(result2.notifs[0]).toBe("Username already exists");
   });
 
   it("should prevent duplicate emails", async () => {
@@ -43,12 +43,12 @@ describe("Register test", () => {
     const result2 = await registerUser(duplicateEmail);
 
     expect(result1.user.username).toBe(registerUser1.username);
-    expect(result2.messages[0]).toBe("Email already exists");
+    expect(result2.notifs[0]).toBe("Email already exists");
   });
 
   it("should prevent wrong passwords", async () => {
     const result = await registerUser(wrongPassword);
 
-    expect(result.messages[0]).toBe("Passwords do not match");
+    expect(result.notifs[0]).toBe("Passwords do not match");
   });
 });

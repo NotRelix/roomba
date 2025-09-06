@@ -16,7 +16,7 @@ export const createRoomHandler = factory.createHandlers(
       const createRoomResult = await createRoomDb(user.id, body);
       if (!createRoomResult) {
         return c.json(
-          { success: false, messages: ["Failed to create a room"] },
+          { success: false, notifs: ["Failed to create a room"] },
           500
         );
       }
@@ -24,16 +24,16 @@ export const createRoomHandler = factory.createHandlers(
       return c.json(
         {
           success: true,
-          messages: ["Successfully created a room"],
           user: safeUser,
           room: createRoomResult.room,
           isAdmin: createRoomResult.isAdmin,
+          notifs: ["Successfully created a room"],
         },
         201
       );
     } catch (err) {
       return c.json(
-        { success: false, messages: ["Failed to create a room"] },
+        { success: false, notifs: ["Failed to create a room"] },
         500
       );
     }
@@ -53,7 +53,7 @@ export const joinRoomHandler = factory.createHandlers(
         return c.json(
           {
             success: false,
-            messages: ["Failed to join room"],
+            notifs: ["Failed to join room"],
           },
           400
         );
@@ -63,18 +63,15 @@ export const joinRoomHandler = factory.createHandlers(
       return c.json(
         {
           success: true,
-          messages: ["Successfully joined a room"],
           user: safeUser,
           room: joinRoomResult.room,
           isAdmin: joinRoomResult.isAdmin,
+          notifs: ["Successfully joined a room"],
         },
         200
       );
     } catch (err) {
-      return c.json(
-        { success: false, messasges: ["Failed to join a room"] },
-        500
-      );
+      return c.json({ success: false, notifs: ["Failed to join a room"] }, 500);
     }
   }
 );

@@ -17,7 +17,7 @@ describe("Create message test", () => {
     const roomResult = await createRoom(room1, token);
     const result = await createMessage(message1, roomResult.room.id, token);
 
-    expect(result.messages[0]).toBe("Successfully created a message");
+    expect(result.notifs[0]).toBe("Successfully created a message");
   });
 
   it("should create multiple messages", async () => {
@@ -36,7 +36,7 @@ describe("Create message test", () => {
     const result = await createMessage(message1, roomResult.room.id);
 
     expect(result.success).toBe(false);
-    expect(result.messages[0]).toBe("Unauthorized access");
+    expect(result.notifs[0]).toBe("Unauthorized access");
   });
 
   it("should prevent fake tokens", async () => {
@@ -46,7 +46,7 @@ describe("Create message test", () => {
     const result = await createMessage(message1, roomResult.room.id, fakeToken);
 
     expect(result.success).toBe(false);
-    expect(result.messages[0]).toBe("Invalid token");
+    expect(result.notifs[0]).toBe("Invalid token");
   });
 
   it("should prevent sending messages when not in the room", async () => {
@@ -68,7 +68,7 @@ describe("Create message test", () => {
     expect(messageResult1.success).toBeTruthy();
     expect(messageResult1.message.message).toBe(message1.message);
     expect(messageResult2.success).toBe(false);
-    expect(messageResult2.messages[0]).toBe("Forbidden access");
+    expect(messageResult2.notifs[0]).toBe("Forbidden access");
   });
 
   it("should prevent sending messages on different rooms that users created", async () => {
@@ -90,9 +90,9 @@ describe("Create message test", () => {
     );
 
     expect(messageResult1.success).toBe(false);
-    expect(messageResult1.messages[0]).toBe("Forbidden access");
+    expect(messageResult1.notifs[0]).toBe("Forbidden access");
     expect(messageResult2.success).toBe(false);
-    expect(messageResult2.messages[0]).toBe("Forbidden access");
+    expect(messageResult2.notifs[0]).toBe("Forbidden access");
   });
 
   it("should allow sending messages after joining the room", async () => {

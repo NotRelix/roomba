@@ -10,14 +10,14 @@ export const useValidateLogin = (): MiddlewareHandler<loginEnv> => {
     const result = loginValidator.safeParse(body);
     const errorMessage = {
       success: false,
-      messages: ["Invalid username or password"],
+      notifs: ["Invalid username or password"],
     };
 
     if (!result.success) {
       return c.json(
         {
           success: false,
-          messages: result.error!.issues.map((message) => message.message),
+          notifs: result.error!.issues.map((message) => message.message),
         },
         400
       );
