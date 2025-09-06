@@ -1,14 +1,21 @@
 import { createMessageDb } from "#db/query";
 import { useAuth } from "#middlewares/auth";
-import { useValidateCreateMessage } from "#middlewares/messages";
+import {
+  useValidateCreateMessage,
+  useValidateGetMessages,
+} from "#middlewares/messages";
 import type { InsertMessage } from "@repo/shared/types";
 import { createFactory } from "hono/factory";
 
 const factory = createFactory();
 
-export const getMessagesHandler = factory.createHandlers(async (c) => {
-  return c.json("getting messages");
-});
+export const getMessagesHandler = factory.createHandlers(
+  useAuth(),
+  useValidateGetMessages(),
+  async (c) => {
+    return c.json("getting messages");
+  }
+);
 
 export const createMessageHandler = factory.createHandlers(
   useAuth(),

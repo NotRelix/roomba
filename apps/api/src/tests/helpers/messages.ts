@@ -1,6 +1,24 @@
 import type { createMessageType } from "@repo/types/message";
 import { app } from "#index";
 
+export const getMessages = async (roomId: number | string, token?: string) => {
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+  };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  const response = await app.request(`/rooms/${roomId}/messages`, {
+    method: "GET",
+    headers: new Headers(headers),
+  });
+
+  const result = await response.json();
+  return result;
+};
+
 export const createMessage = async (
   message: createMessageType,
   roomId: number | string,

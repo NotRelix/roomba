@@ -8,6 +8,36 @@ import { createMiddleware } from "hono/factory";
 
 const INT_MAX = 2 ** 31 - 1;
 
+export const useValidateGetMessages = (): MiddlewareHandler => {
+  return createMiddleware(async (c: Context, next: Next) => {
+    const roomId = Number(c.req.param("roomId"));
+
+    if (roomId >= INT_MAX || isNaN(roomId)) {
+      return c.json(
+        {
+          success: false,
+          messages: ["Invalid room ID"],
+        },
+        400
+      );
+    }
+
+    const user = c.get("user");
+    const isUserJoined = await getUserInRoomDb(user.id, roomId);
+    if (!isUserJoined) {
+      return c.json(
+        {
+          success: false,
+          messages: ["Forbidden access"],
+        },
+        403
+      );
+    }
+
+    await next();
+  });
+};
+
 export const useValidateCreateMessage =
   (): MiddlewareHandler<createMessageEnv> => {
     return createMiddleware<createMessageEnv>(
