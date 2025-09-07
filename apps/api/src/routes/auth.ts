@@ -1,10 +1,9 @@
 import { Hono } from "hono";
-import { registerHandler } from "../controllers/register.js";
-import { loginHandler } from "../controllers/login.js";
+import { registerHandler } from "#controllers/register";
+import { loginHandler } from "#controllers/login";
 
-const app = new Hono();
-
-app.post("/register", ...registerHandler);
-app.post("/login", ...loginHandler);
+const app = new Hono()
+  .post("/register", ...registerHandler)
+  .post("/login", ...loginHandler);
 
 export default app;

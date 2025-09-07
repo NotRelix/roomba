@@ -16,17 +16,21 @@ beforeAll(async () => {
 describe("Login test", () => {
   it("should login user", async () => {
     const result = await loginUser(loginUser1);
-    expect(result.success).toBeTruthy();
-    expect(result.token).toBeDefined();
+    if (!result.success) {
+      throw new Error(`Failed to login user: ${result.notifs[0]}`);
+    }
+    expect(result.data.token).toBeDefined();
   });
 
   it("should prevent wrong username", async () => {
     const result = await loginUser(loginWrongUsername);
+    expect(result.success).toBe(false);
     expect(result.notifs[0]).toBe("Invalid username or password");
   });
 
   it("should prevent wrong password", async () => {
     const result = await loginUser(loginWrongPassword);
+    expect(result.success).toBe(false);
     expect(result.notifs[0]).toBe("Invalid username or password");
   });
 });
