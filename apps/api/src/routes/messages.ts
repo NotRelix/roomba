@@ -6,11 +6,10 @@ import {
 } from "#controllers/messages";
 import { Hono } from "hono";
 
-const app = new Hono();
-
-app.get("/", ...getMessagesHandler);
-app.post("/", ...createMessageHandler);
-app.patch("/:messageId", ...editMessageHandler);
-app.delete("/:messageId", ...deleteMessageHandler);
+const app = new Hono()
+  .get("/", ...getMessagesHandler)
+  .post("/", ...createMessageHandler)
+  .patch("/:messageId", ...editMessageHandler)
+  .delete("/:messageId", ...deleteMessageHandler);
 
 export default app;

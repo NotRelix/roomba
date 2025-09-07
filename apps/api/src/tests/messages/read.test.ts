@@ -40,7 +40,7 @@ describe("Get messages test", () => {
     const result = await getMessages(roomResult.room.id, user.data.token);
 
     expect(result.success).toBeTruthy();
-    expect(result.messages.length).toBe(1);
+    expect(result.data.messages.length).toBe(1);
   });
 
   it("should get multiple messages", async () => {
@@ -53,9 +53,9 @@ describe("Get messages test", () => {
     const result = await getMessages(roomResult.room.id, user.data.token);
 
     expect(result.success).toBeTruthy();
-    expect(result.messages.length).toBe(3);
-    expect(result.messages[0].message.message).toBe(message1.message);
-    expect(result.messages[1].message.message).toBe(message2.message);
-    expect(result.messages[2].message.message).toBe(message1.message);
+    expect(result.data.messages.length).toBe(3);
+    expect(result.data.messages[0].message.message).toBe(message1.message);
+    expect(result.data.messages[1].message.message).toBe(message2.message);
+    expect(result.data.messages[2].message.message).toBe(message1.message);
   });
 });

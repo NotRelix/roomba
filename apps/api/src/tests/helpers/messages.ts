@@ -1,5 +1,5 @@
 import type { createMessageType } from "@repo/types/message";
-import { app } from "#index";
+import app from "#index";
 
 export const getMessages = async (roomId: number | string, token?: string) => {
   const headers: HeadersInit = {

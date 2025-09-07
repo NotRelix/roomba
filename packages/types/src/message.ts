@@ -1,4 +1,4 @@
-import { SelectUser } from "@repo/shared/types";
+import { SelectMessage, SelectUser } from "@repo/shared/types";
 import z from "zod";
 
 export type getMessagesEnv = {
@@ -16,6 +16,11 @@ export type createMessageEnv = {
 };
 
 export type createMessageType = z.infer<typeof createMessageValidator>;
+
+export type MessageWithAuthor = {
+  message: SelectMessage;
+  author: SelectUser;
+};
 
 export const createMessageValidator = z.object({
   message: z

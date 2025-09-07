@@ -1,4 +1,6 @@
+import { SelectMessage, SelectUser } from "@repo/shared/types";
 import { safeUser } from "@repo/types/user";
+import { MessageWithAuthor } from "./message.js";
 
 export type ApiSuccess<T = void> = {
   success: true;
@@ -20,4 +22,8 @@ export type LoginData = {
 export type RegisterData = {
   user: safeUser;
   token: string;
+};
+
+export type GetMessagesData = {
+  messages: MessageWithAuthor[];
 };

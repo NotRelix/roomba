@@ -5,6 +5,7 @@ import {
   useValidateGetMessages,
 } from "#middlewares/messages";
 import type { InsertMessage } from "@repo/shared/types";
+import type { ApiResponse, GetMessagesData } from "@repo/types/api";
 import { createFactory } from "hono/factory";
 
 const factory = createFactory();
@@ -17,13 +18,15 @@ export const getMessagesHandler = factory.createHandlers(
       const roomId = c.get("roomId");
       const getMessagesResult = await getMessagesDb(roomId);
 
-      return c.json({
+      return c.json<ApiResponse<GetMessagesData>>({
         success: true,
-        messages: getMessagesResult,
         notifs: ["Successfully fetched messages"],
+        data: {
+          messages: getMessagesResult ?? [],
+        },
       });
     } catch (err) {
-      return c.json({
+      return c.json<ApiResponse>({
         success: false,
         notifs: ["Failed to get messages"],
       });

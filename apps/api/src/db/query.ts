@@ -15,6 +15,7 @@ import {
   usersToRooms,
 } from "@repo/shared/schema";
 import { and, eq } from "drizzle-orm";
+import type { MessageWithAuthor } from "@repo/types/message";
 
 export const getUsernameDb = async (
   username: string
@@ -136,13 +137,7 @@ export const createRoomDb = async (
 
 export const getMessagesDb = async (
   roomId: number
-): Promise<
-  | {
-      message: SelectMessage;
-      author: SelectUser;
-    }[]
-  | null
-> => {
+): Promise<MessageWithAuthor[] | null> => {
   const messages = await db
     .select({
       message: messagesTable,
