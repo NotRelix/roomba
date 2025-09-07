@@ -17,25 +17,27 @@ describe("Register test", () => {
   it("should add user to database", async () => {
     const result = await registerUser(registerUser1);
 
-    expect(result.success, result.notifs[0]).toBe(true);
-
-    if (result.success) {
-      expect(result.data.user.username).toBe(registerUser1.username);
-      expect(result.data.token).toBeDefined();
+    if (!result.success) {
+      throw new Error(result.notifs[0]);
     }
+
+    expect(result.data.user.username).toBe(registerUser1.username);
+    expect(result.data.token).toBeDefined();
   });
 
   it("should add multiple users", async () => {
     const result1 = await registerUser(registerUser1);
     const result2 = await registerUser(registerUser2);
 
-    expect(result1.success, result1.notifs[0]).toBe(true);
-    expect(result2.success, result2.notifs[0]).toBe(true);
-
-    if (result1.success && result2.success) {
-      expect(result1.data.user.username).toBe(registerUser1.username);
-      expect(result2.data.user.username).toBe(registerUser2.username);
+    if (!result1.success) {
+      throw new Error(result1.notifs[0]);
     }
+    if (!result2.success) {
+      throw new Error(result2.notifs[0]);
+    }
+
+    expect(result1.data.user.username).toBe(registerUser1.username);
+    expect(result2.data.user.username).toBe(registerUser2.username);
   });
 
   it("should prevent duplicate usernames", async () => {

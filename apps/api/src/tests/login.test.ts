@@ -16,9 +16,11 @@ beforeAll(async () => {
 describe("Login test", () => {
   it("should login user", async () => {
     const result = await loginUser(loginUser1);
+
     if (!result.success) {
-      throw new Error(`Failed to login user: ${result.notifs[0]}`);
+      throw new Error(result.notifs[0]);
     }
+
     expect(result.data.token).toBeDefined();
   });
 

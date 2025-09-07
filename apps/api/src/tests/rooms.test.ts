@@ -13,26 +13,29 @@ describe("Create rooms test", () => {
   it("should create a room", async () => {
     const user = await registerUser(registerUser1);
 
-    expect(user.success).toBe(true);
-    if (user.success) {
-      const result = await createRoom(room1, user.data.token);
-
-      expect(result.success).toBe(true);
-      expect(result.room.name).toBe("the best group chat");
-      expect(result.isAdmin).toBeTruthy();
+    if (!user.success) {
+      throw new Error(user.notifs[0]);
     }
+
+    const result = await createRoom(room1, user.data.token);
+
+    expect(result.success).toBeTruthy();
+    expect(result.room.name).toBe("the best group chat");
+    expect(result.isAdmin).toBeTruthy();
   });
 
   it("should create multiple rooms", async () => {
     const user = await registerUser(registerUser1);
-    expect(user.success).toBe(true);
-    if (user.success) {
-      const result1 = await createRoom(room1, user.data.token);
-      const result2 = await createRoom(room2, user.data.token);
 
-      expect(result1.room.name).toBe(room1.name);
-      expect(result2.room.name).toBe(room2.name);
+    if (!user.success) {
+      throw new Error(user.notifs[0]);
     }
+
+    const result1 = await createRoom(room1, user.data.token);
+    const result2 = await createRoom(room2, user.data.token);
+
+    expect(result1.room.name).toBe(room1.name);
+    expect(result2.room.name).toBe(room2.name);
   });
 
   it("should prevent unauthenticated users", async () => {
@@ -54,115 +57,127 @@ describe("Join rooms test", () => {
     const user1 = await registerUser(registerUser1);
     const user2 = await registerUser(registerUser2);
 
-    expect(user1.success).toBe(true);
-    expect(user2.success).toBe(true);
-    if (user1.success && user2.success) {
-      const roomResult = await createRoom(room1, user1.data.token);
-
-      const joinRoomResult = await joinRoom(
-        roomResult.room.id,
-        user2.data.token
-      );
-
-      expect(joinRoomResult.success).toBeTruthy();
-      expect(joinRoomResult.room.name).toBe(room1.name);
-      expect(joinRoomResult.isAdmin).toBe(false);
-      expect(joinRoomResult.room.id).toBe(roomResult.room.id);
+    if (!user1.success) {
+      throw new Error(user1.notifs[0]);
     }
+    if (!user2.success) {
+      throw new Error(user2.notifs[0]);
+    }
+
+    const roomResult = await createRoom(room1, user1.data.token);
+
+    const joinRoomResult = await joinRoom(roomResult.room.id, user2.data.token);
+
+    expect(joinRoomResult.success).toBeTruthy();
+    expect(joinRoomResult.room.name).toBe(room1.name);
+    expect(joinRoomResult.isAdmin).toBeFalsy();
+    expect(joinRoomResult.room.id).toBe(roomResult.room.id);
   });
 
   it("should not join an invalid room (string)", async () => {
     const user1 = await registerUser(registerUser1);
     const user2 = await registerUser(registerUser2);
 
-    expect(user1.success).toBe(true);
-    expect(user2.success).toBe(true);
-    if (user1.success && user2.success) {
-      await createRoom(room1, user1.data.token);
-
-      const invalidRoomId = "ABC";
-      const joinRoomResult = await joinRoom(invalidRoomId, user2.data.token);
-
-      expect(joinRoomResult.success).toBe(false);
-      expect(joinRoomResult.notifs[0]).toBe("Invalid room ID");
+    if (!user1.success) {
+      throw new Error(user1.notifs[0]);
     }
+    if (!user2.success) {
+      throw new Error(user2.notifs[0]);
+    }
+
+    await createRoom(room1, user1.data.token);
+
+    const invalidRoomId = "ABC";
+    const joinRoomResult = await joinRoom(invalidRoomId, user2.data.token);
+
+    expect(joinRoomResult.success).toBeFalsy();
+    expect(joinRoomResult.notifs[0]).toBe("Invalid room ID");
   });
 
   it("should not join an invalid room (very big number)", async () => {
     const user1 = await registerUser(registerUser1);
     const user2 = await registerUser(registerUser2);
 
-    expect(user1.success).toBe(true);
-    expect(user2.success).toBe(true);
-    if (user1.success && user2.success) {
-      await createRoom(room1, user1.data.token);
-
-      const invalidRoomId = 100232123123123;
-      const joinRoomResult = await joinRoom(invalidRoomId, user2.data.token);
-
-      expect(joinRoomResult.success).toBe(false);
-      expect(joinRoomResult.notifs[0]).toBe("Invalid room ID");
+    if (!user1.success) {
+      throw new Error(user1.notifs[0]);
     }
+    if (!user2.success) {
+      throw new Error(user2.notifs[0]);
+    }
+
+    await createRoom(room1, user1.data.token);
+
+    const invalidRoomId = 100232123123123;
+    const joinRoomResult = await joinRoom(invalidRoomId, user2.data.token);
+
+    expect(joinRoomResult.success).toBeFalsy();
+    expect(joinRoomResult.notifs[0]).toBe("Invalid room ID");
   });
 
   it("should not join an invalid room (number)", async () => {
     const user1 = await registerUser(registerUser1);
     const user2 = await registerUser(registerUser2);
 
-    expect(user1.success).toBe(true);
-    expect(user2.success).toBe(true);
-    if (user1.success && user2.success) {
-      await createRoom(room1, user1.data.token);
-
-      const invalidRoomId = 102093;
-      const joinRoomResult = await joinRoom(invalidRoomId, user2.data.token);
-
-      expect(joinRoomResult.success).toBe(false);
-      expect(joinRoomResult.notifs[0]).toBe("Room doesn't exist");
+    if (!user1.success) {
+      throw new Error(user1.notifs[0]);
     }
+    if (!user2.success) {
+      throw new Error(user2.notifs[0]);
+    }
+
+    await createRoom(room1, user1.data.token);
+
+    const invalidRoomId = 102093;
+    const joinRoomResult = await joinRoom(invalidRoomId, user2.data.token);
+
+    expect(joinRoomResult.success).toBeFalsy();
+    expect(joinRoomResult.notifs[0]).toBe("Room doesn't exist");
   });
 
   it("should not join the same room", async () => {
     const user1 = await registerUser(registerUser1);
     const user2 = await registerUser(registerUser2);
 
-    expect(user1.success).toBe(true);
-    expect(user2.success).toBe(true);
-    if (user1.success && user2.success) {
-      const roomResult = await createRoom(room1, user1.data.token);
-
-      const joinRoomResult1 = await joinRoom(
-        roomResult.room.id,
-        user2.data.token
-      );
-      const joinRoomResult2 = await joinRoom(
-        roomResult.room.id,
-        user2.data.token
-      );
-
-      expect(joinRoomResult1.success).toBeTruthy();
-      expect(joinRoomResult1.room.name).toBe(room1.name);
-      expect(joinRoomResult2.success).toBe(false);
-      expect(joinRoomResult2.notifs[0]).toBe("User is already in the room");
+    if (!user1.success) {
+      throw new Error(user1.notifs[0]);
     }
+    if (!user2.success) {
+      throw new Error(user2.notifs[0]);
+    }
+
+    const roomResult = await createRoom(room1, user1.data.token);
+
+    const joinRoomResult1 = await joinRoom(
+      roomResult.room.id,
+      user2.data.token
+    );
+    const joinRoomResult2 = await joinRoom(
+      roomResult.room.id,
+      user2.data.token
+    );
+
+    expect(joinRoomResult1.success).toBeTruthy();
+    expect(joinRoomResult1.room.name).toBe(room1.name);
+    expect(joinRoomResult2.success).toBeFalsy();
+    expect(joinRoomResult2.notifs[0]).toBe("User is already in the room");
   });
 
   it("should prevent users from joining a private room", async () => {
     const user1 = await registerUser(registerUser1);
     const user2 = await registerUser(registerUser2);
 
-    expect(user1.success).toBe(true);
-    expect(user2.success).toBe(true);
-    if (user1.success && user2.success) {
-      const roomResult = await createRoom(privateRoom1, user1.data.token);
-
-      const joinRoomResult = await joinRoom(
-        roomResult.room.id,
-        user2.data.token
-      );
-
-      expect(joinRoomResult.success).toBe(false);
-      expect(joinRoomResult.notifs[0]).toBe("Can't join a private room");
+    if (!user1.success) {
+      throw new Error(user1.notifs[0]);
     }
+    if (!user2.success) {
+      throw new Error(user2.notifs[0]);
+    }
+
+    const roomResult = await createRoom(privateRoom1, user1.data.token);
+
+    const joinRoomResult = await joinRoom(roomResult.room.id, user2.data.token);
+
+    expect(joinRoomResult.success).toBeFalsy();
+    expect(joinRoomResult.notifs[0]).toBe("Can't join a private room");
   });
 });
