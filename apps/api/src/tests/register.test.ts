@@ -31,25 +31,23 @@ describe("Register test", () => {
 
   it("should prevent duplicate usernames", async () => {
     await registerUser(registerUser1);
-    const result2 = await registerUser(duplicateUsername);
 
-    expect(result2.success).toBe(false);
-    expect(result2.notifs[0]).toBe("Username already exists");
+    await expect(registerUser(duplicateUsername)).rejects.toThrow(
+      "Username already exists"
+    );
   });
 
   it("should prevent duplicate emails", async () => {
-    const result1 = await registerUser(registerUser1);
-    const result2 = await registerUser(duplicateEmail);
+    await registerUser(registerUser1);
 
-    expect(result1.success).toBe(true);
-    expect(result2.success).toBe(false);
-    expect(result2.notifs[0]).toBe("Email already exists");
+    await expect(registerUser(duplicateEmail)).rejects.toThrow(
+      "Email already exists"
+    );
   });
 
   it("should prevent wrong passwords", async () => {
-    const result = await registerUser(wrongPassword);
-
-    expect(result.success).toBe(false);
-    expect(result.notifs[0]).toBe("Passwords do not match");
+    await expect(registerUser(wrongPassword)).rejects.toThrow(
+      "Passwords do not match"
+    );
   });
 });
