@@ -5,13 +5,8 @@ import { testClient } from "hono/testing";
 const client = testClient(app);
 
 export const registerUser = async (user: registerType) => {
-  const registerResponse = await app.request("/auth/register", {
-    method: "POST",
-    headers: new Headers({ "Content-Type": "application/json" }),
-    body: JSON.stringify(user),
-  });
-  const registerResult = await registerResponse.json();
-  return registerResult;
+  const response = await client.auth.register.$post({ json: user });
+  return response.json();
 };
 
 export const loginUser = async (user: loginType) => {

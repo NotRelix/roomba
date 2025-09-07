@@ -1,3 +1,5 @@
+import { safeUser } from "@repo/types/user";
+
 export type ApiSuccess<T = void> = {
   success: true;
   notifs: string[];
@@ -12,5 +14,10 @@ export type ApiError = {
 export type ApiResponse<T = void> = ApiSuccess<T> | ApiError;
 
 export type LoginData = {
+  token: string;
+};
+
+export type RegisterData = {
+  user: safeUser;
   token: string;
 };

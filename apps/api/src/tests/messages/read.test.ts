@@ -14,45 +14,54 @@ beforeEach(async () => {
 describe("Get messages test", () => {
   it("should prevent fake tokens", async () => {
     const fakeToken = "thisisafaketoken";
-    const { token } = await registerUser(registerUser1);
-    const roomResult = await createRoom(room1, token);
-    await createMessage(message1, roomResult.room.id, token);
-    const result = await getMessages(roomResult.room.id, fakeToken);
-
-    expect(result.success).toBe(false);
+    const user = await registerUser(registerUser1);
+    expect(user.success).toBe(true);
+    if (user.success) {
+      const roomResult = await createRoom(room1, user.data.token);
+      await createMessage(message1, roomResult.room.id, user.data.token);
+      const result = await getMessages(roomResult.room.id, fakeToken);
+      expect(result.success).toBe(false);
+    }
   });
 
   it("should prevent unauthenticated users", async () => {
-    const { token } = await registerUser(registerUser1);
-    const roomResult = await createRoom(room1, token);
-    await createMessage(message1, roomResult.room.id, token);
-    const result = await getMessages(roomResult.room.id);
+    const user = await registerUser(registerUser1);
+    expect(user.success).toBe(true);
+    if (user.success) {
+      const roomResult = await createRoom(room1, user.data.token);
+      await createMessage(message1, roomResult.room.id, user.data.token);
+      const result = await getMessages(roomResult.room.id);
 
-    expect(result.success).toBe(false);
+      expect(result.success).toBe(false);
+    }
   });
 
   it("should get message", async () => {
-    const { token } = await registerUser(registerUser1);
-    const roomResult = await createRoom(room1, token);
-    await createMessage(message1, roomResult.room.id, token);
-    const result = await getMessages(roomResult.room.id, token);
+    const user = await registerUser(registerUser1);
+    if (user.success) {
+      const roomResult = await createRoom(room1, user.data.token);
+      await createMessage(message1, roomResult.room.id, user.data.token);
+      const result = await getMessages(roomResult.room.id, user.data.token);
 
-    expect(result.success).toBeTruthy();
-    expect(result.messages.length).toBe(1);
+      expect(result.success).toBeTruthy();
+      expect(result.messages.length).toBe(1);
+    }
   });
 
   it("should get multiple messages", async () => {
-    const { token } = await registerUser(registerUser1);
-    const roomResult = await createRoom(room1, token);
-    await createMessage(message1, roomResult.room.id, token);
-    await createMessage(message2, roomResult.room.id, token);
-    await createMessage(message1, roomResult.room.id, token);
-    const result = await getMessages(roomResult.room.id, token);
+    const user = await registerUser(registerUser1);
+    if (user.success) {
+      const roomResult = await createRoom(room1, user.data.token);
+      await createMessage(message1, roomResult.room.id, user.data.token);
+      await createMessage(message2, roomResult.room.id, user.data.token);
+      await createMessage(message1, roomResult.room.id, user.data.token);
+      const result = await getMessages(roomResult.room.id, user.data.token);
 
-    expect(result.success).toBeTruthy();
-    expect(result.messages.length).toBe(3);
-    expect(result.messages[0].message.message).toBe(message1.message);
-    expect(result.messages[1].message.message).toBe(message2.message);
-    expect(result.messages[2].message.message).toBe(message1.message);
+      expect(result.success).toBeTruthy();
+      expect(result.messages.length).toBe(3);
+      expect(result.messages[0].message.message).toBe(message1.message);
+      expect(result.messages[1].message.message).toBe(message2.message);
+      expect(result.messages[2].message.message).toBe(message1.message);
+    }
   });
 });

@@ -4,6 +4,7 @@ import type { InsertUser } from "@repo/shared/types";
 import { genSalt, hash } from "bcrypt-ts";
 import { signToken } from "@repo/helpers/token";
 import { useValidateRegister } from "#middlewares/register";
+import type { ApiResponse, RegisterData } from "@repo/types/api";
 
 const factory = createFactory();
 
@@ -25,7 +26,7 @@ export const registerHandler = factory.createHandlers(
 
       const insertUserResult = await registerDb(newUser);
       if (!insertUserResult) {
-        return c.json(
+        return c.json<ApiResponse>(
           {
             success: false,
             notifs: ["Failed to register user"],
@@ -36,17 +37,19 @@ export const registerHandler = factory.createHandlers(
 
       const token = await signToken(insertUserResult);
       const { password, ...safeUser } = insertUserResult;
-      return c.json(
+      return c.json<ApiResponse<RegisterData>>(
         {
           success: true,
-          user: safeUser,
-          token: token,
           notifs: ["Successfully registered user"],
+          data: {
+            user: safeUser,
+            token: token,
+          },
         },
         201
       );
     } catch (err) {
-      return c.json(
+      return c.json<ApiResponse>(
         {
           success: false,
           notifs: ["Failed to register user"],

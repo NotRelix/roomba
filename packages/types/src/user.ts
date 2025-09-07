@@ -29,6 +29,8 @@ export type registerType = z.infer<typeof registerValidator>;
 
 export type loginType = z.infer<typeof loginValidator>;
 
+export type safeUser = Omit<SelectUser, "password">;
+
 export const registerValidator = z.object({
   firstName: z
     .string()
