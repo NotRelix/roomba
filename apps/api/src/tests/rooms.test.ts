@@ -13,10 +13,6 @@ describe("Create rooms test", () => {
   it("should create a room", async () => {
     const user = await registerUser(registerUser1);
 
-    if (!user.success) {
-      throw new Error(user.notifs[0]);
-    }
-
     const result = await createRoom(room1, user.data.token);
 
     expect(result.success).toBeTruthy();
@@ -26,10 +22,6 @@ describe("Create rooms test", () => {
 
   it("should create multiple rooms", async () => {
     const user = await registerUser(registerUser1);
-
-    if (!user.success) {
-      throw new Error(user.notifs[0]);
-    }
 
     const result1 = await createRoom(room1, user.data.token);
     const result2 = await createRoom(room2, user.data.token);
@@ -57,13 +49,6 @@ describe("Join rooms test", () => {
     const user1 = await registerUser(registerUser1);
     const user2 = await registerUser(registerUser2);
 
-    if (!user1.success) {
-      throw new Error(user1.notifs[0]);
-    }
-    if (!user2.success) {
-      throw new Error(user2.notifs[0]);
-    }
-
     const roomResult = await createRoom(room1, user1.data.token);
 
     const joinRoomResult = await joinRoom(roomResult.room.id, user2.data.token);
@@ -78,13 +63,6 @@ describe("Join rooms test", () => {
     const user1 = await registerUser(registerUser1);
     const user2 = await registerUser(registerUser2);
 
-    if (!user1.success) {
-      throw new Error(user1.notifs[0]);
-    }
-    if (!user2.success) {
-      throw new Error(user2.notifs[0]);
-    }
-
     await createRoom(room1, user1.data.token);
 
     const invalidRoomId = "ABC";
@@ -97,13 +75,6 @@ describe("Join rooms test", () => {
   it("should not join an invalid room (very big number)", async () => {
     const user1 = await registerUser(registerUser1);
     const user2 = await registerUser(registerUser2);
-
-    if (!user1.success) {
-      throw new Error(user1.notifs[0]);
-    }
-    if (!user2.success) {
-      throw new Error(user2.notifs[0]);
-    }
 
     await createRoom(room1, user1.data.token);
 
@@ -118,13 +89,6 @@ describe("Join rooms test", () => {
     const user1 = await registerUser(registerUser1);
     const user2 = await registerUser(registerUser2);
 
-    if (!user1.success) {
-      throw new Error(user1.notifs[0]);
-    }
-    if (!user2.success) {
-      throw new Error(user2.notifs[0]);
-    }
-
     await createRoom(room1, user1.data.token);
 
     const invalidRoomId = 102093;
@@ -137,13 +101,6 @@ describe("Join rooms test", () => {
   it("should not join the same room", async () => {
     const user1 = await registerUser(registerUser1);
     const user2 = await registerUser(registerUser2);
-
-    if (!user1.success) {
-      throw new Error(user1.notifs[0]);
-    }
-    if (!user2.success) {
-      throw new Error(user2.notifs[0]);
-    }
 
     const roomResult = await createRoom(room1, user1.data.token);
 
@@ -165,13 +122,6 @@ describe("Join rooms test", () => {
   it("should prevent users from joining a private room", async () => {
     const user1 = await registerUser(registerUser1);
     const user2 = await registerUser(registerUser2);
-
-    if (!user1.success) {
-      throw new Error(user1.notifs[0]);
-    }
-    if (!user2.success) {
-      throw new Error(user2.notifs[0]);
-    }
 
     const roomResult = await createRoom(privateRoom1, user1.data.token);
 

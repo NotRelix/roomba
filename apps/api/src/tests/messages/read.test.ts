@@ -16,10 +16,6 @@ describe("Get messages test", () => {
     const fakeToken = "thisisafaketoken";
     const user = await registerUser(registerUser1);
 
-    if (!user.success) {
-      throw new Error(user.notifs[0]);
-    }
-
     const roomResult = await createRoom(room1, user.data.token);
     await createMessage(message1, roomResult.room.id, user.data.token);
     const result = await getMessages(roomResult.room.id, fakeToken);
@@ -28,10 +24,6 @@ describe("Get messages test", () => {
 
   it("should prevent unauthenticated users", async () => {
     const user = await registerUser(registerUser1);
-
-    if (!user.success) {
-      throw new Error(user.notifs[0]);
-    }
 
     const roomResult = await createRoom(room1, user.data.token);
     await createMessage(message1, roomResult.room.id, user.data.token);
@@ -43,10 +35,6 @@ describe("Get messages test", () => {
   it("should get message", async () => {
     const user = await registerUser(registerUser1);
 
-    if (!user.success) {
-      throw new Error(user.notifs[0]);
-    }
-
     const roomResult = await createRoom(room1, user.data.token);
     await createMessage(message1, roomResult.room.id, user.data.token);
     const result = await getMessages(roomResult.room.id, user.data.token);
@@ -57,10 +45,6 @@ describe("Get messages test", () => {
 
   it("should get multiple messages", async () => {
     const user = await registerUser(registerUser1);
-
-    if (!user.success) {
-      throw new Error(user.notifs[0]);
-    }
 
     const roomResult = await createRoom(room1, user.data.token);
     await createMessage(message1, roomResult.room.id, user.data.token);

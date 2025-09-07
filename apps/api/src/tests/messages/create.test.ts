@@ -15,10 +15,6 @@ describe("Create message test", () => {
   it("should create a message", async () => {
     const user = await registerUser(registerUser1);
 
-    if (!user.success) {
-      throw new Error(user.notifs[0]);
-    }
-
     const roomResult = await createRoom(room1, user.data.token);
     const result = await createMessage(
       message1,
@@ -31,10 +27,6 @@ describe("Create message test", () => {
 
   it("should create multiple messages", async () => {
     const user = await registerUser(registerUser1);
-
-    if (!user.success) {
-      throw new Error(user.notifs[0]);
-    }
 
     const roomResult = await createRoom(room1, user.data.token);
     const result1 = await createMessage(
@@ -55,10 +47,6 @@ describe("Create message test", () => {
   it("should prevent unauthenticated users", async () => {
     const user = await registerUser(registerUser1);
 
-    if (!user.success) {
-      throw new Error(user.notifs[0]);
-    }
-
     const roomResult = await createRoom(room1, user.data.token);
     const result = await createMessage(message1, roomResult.room.id);
 
@@ -68,10 +56,6 @@ describe("Create message test", () => {
 
   it("should prevent fake tokens", async () => {
     const user = await registerUser(registerUser1);
-
-    if (!user.success) {
-      throw new Error(user.notifs[0]);
-    }
 
     const fakeToken = "thisisafaketoken";
     const roomResult = await createRoom(room1, user.data.token);
@@ -84,13 +68,6 @@ describe("Create message test", () => {
   it("should prevent sending messages when not in the room", async () => {
     const user1 = await registerUser(registerUser1);
     const user2 = await registerUser(registerUser2);
-
-    if (!user1.success) {
-      throw new Error(user1.notifs[0]);
-    }
-    if (!user2.success) {
-      throw new Error(user2.notifs[0]);
-    }
 
     const roomResult = await createRoom(room1, user1.data.token);
     const messageResult1 = await createMessage(
@@ -113,13 +90,6 @@ describe("Create message test", () => {
   it("should prevent sending messages on different rooms that users created", async () => {
     const user1 = await registerUser(registerUser1);
     const user2 = await registerUser(registerUser2);
-
-    if (!user1.success) {
-      throw new Error(user1.notifs[0]);
-    }
-    if (!user2.success) {
-      throw new Error(user2.notifs[0]);
-    }
 
     const roomResult1 = await createRoom(room1, user1.data.token);
     const roomResult2 = await createRoom(room2, user2.data.token);
@@ -144,13 +114,6 @@ describe("Create message test", () => {
   it("should allow sending messages after joining the room", async () => {
     const user1 = await registerUser(registerUser1);
     const user2 = await registerUser(registerUser2);
-
-    if (!user1.success) {
-      throw new Error(user1.notifs[0]);
-    }
-    if (!user2.success) {
-      throw new Error(user2.notifs[0]);
-    }
 
     const roomResult = await createRoom(room1, user1.data.token);
 
@@ -180,10 +143,6 @@ describe("Create message test", () => {
   it("should prevent sending messages on an invalid room ID (string)", async () => {
     const user = await registerUser(registerUser1);
 
-    if (!user.success) {
-      throw new Error(user.notifs[0]);
-    }
-
     await createRoom(room1, user.data.token);
     const invalidRoomId = "ABC";
     const result = await createMessage(
@@ -198,10 +157,6 @@ describe("Create message test", () => {
   it("should prevent sending messages on an invalid room ID (very big number)", async () => {
     const user = await registerUser(registerUser1);
 
-    if (!user.success) {
-      throw new Error(user.notifs[0]);
-    }
-
     await createRoom(room1, user.data.token);
     const invalidRoomId = 1034982347978;
     const result = await createMessage(
@@ -215,10 +170,6 @@ describe("Create message test", () => {
 
   it("should prevent sending messages on an invalid room ID (number)", async () => {
     const user = await registerUser(registerUser1);
-
-    if (!user.success) {
-      throw new Error(user.notifs[0]);
-    }
 
     await createRoom(room1, user.data.token);
     const invalidRoomId = 12300;
