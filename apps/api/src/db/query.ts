@@ -135,6 +135,18 @@ export const createRoomDb = async (
   return result ?? null;
 };
 
+export const editRoomDb = async (
+  roomId: number,
+  body: InsertRoom
+): Promise<SelectRoom | null> => {
+  const [room] = await db
+    .update(roomsTable)
+    .set(body)
+    .where(eq(roomsTable.id, roomId))
+    .returning();
+  return room ?? null;
+};
+
 export const getMessagesDb = async (
   roomId: number
 ): Promise<MessageWithAuthor[] | null> => {

@@ -30,6 +30,10 @@ export type CreateRoomData = {
   isAdmin: boolean;
 };
 
+export type EditRoomData = {
+  room: SelectRoom;
+};
+
 export type JoinRoomData = CreateRoomData;
 
 export type GetMessagesData = {

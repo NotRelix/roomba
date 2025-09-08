@@ -1,9 +1,10 @@
 import { Hono } from "hono";
 import messages from "#routes/messages";
-import { createRoomDb, joinRoomDb } from "#db/query";
+import { createRoomDb, editRoomDb, joinRoomDb } from "#db/query";
 import type {
   ApiResponse,
   CreateRoomData,
+  EditRoomData,
   JoinRoomData,
 } from "@repo/types/api";
 import { authMiddleware } from "#middlewares/auth";
@@ -50,17 +51,38 @@ const app = new Hono()
   })
   .patch("/:roomId", validateEditRoom, async (c) => {
     try {
+      const body = c.var.validatedData;
       const roomId = c.var.roomId;
-      console.log(roomId);
-      return c.json({
-        success: true,
-        notifs: ["Successfully edited room"],
-      });
+
+      const editRoomResult = await editRoomDb(roomId, body);
+      if (!editRoomResult) {
+        return c.json(
+          {
+            success: false,
+            notifs: ["Room not found"],
+          },
+          404
+        );
+      }
+
+      return c.json<ApiResponse<EditRoomData>>(
+        {
+          success: true,
+          notifs: ["Successfully edited room"],
+          data: {
+            room: editRoomResult,
+          },
+        },
+        200
+      );
     } catch (err) {
-      return c.json({
-        success: false,
-        notifs: ["Failed to edit room"],
-      });
+      return c.json<ApiResponse>(
+        {
+          success: false,
+          notifs: ["Failed to edit room"],
+        },
+        500
+      );
     }
   })
   .post("/:roomId/join", validateJoinRoom, async (c) => {
