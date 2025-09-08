@@ -5,13 +5,20 @@ import {
   usersTable,
   usersToRooms,
 } from "@repo/shared/schema";
+import { sql } from "drizzle-orm";
 
 export const resetDb = async () => {
   try {
-    await db.delete(usersToRooms);
-    await db.delete(messagesTable);
-    await db.delete(usersTable);
-    await db.delete(roomsTable);
+    await db.execute(
+      sql`
+        TRUNCATE TABLE 
+        ${usersToRooms}, 
+        ${messagesTable}, 
+        ${usersTable}, 
+        ${roomsTable} 
+        RESTART IDENTITY CASCADE
+      `
+    );
   } catch (err) {
     console.error(err);
   }
