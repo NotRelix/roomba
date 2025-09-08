@@ -10,7 +10,8 @@ import { authMiddleware } from "#middlewares/auth";
 import { validateCreateRoom, validateJoinRoom } from "#middlewares/rooms";
 
 const app = new Hono()
-  .post("/", authMiddleware, validateCreateRoom, async (c) => {
+  .use(authMiddleware)
+  .post("/", validateCreateRoom, async (c) => {
     try {
       const user = c.var.user;
       const body = c.var.validatedData;
@@ -43,7 +44,7 @@ const app = new Hono()
       );
     }
   })
-  .post("/:roomId/join", authMiddleware, validateJoinRoom, async (c) => {
+  .post("/:roomId/join", validateJoinRoom, async (c) => {
     try {
       const user = c.var.user;
       const roomId = c.var.roomId;

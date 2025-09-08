@@ -13,7 +13,8 @@ import type {
 import { Hono } from "hono";
 
 const app = new Hono()
-  .get("/", authMiddleware, validateGetMessages, async (c) => {
+  .use(authMiddleware)
+  .get("/", validateGetMessages, async (c) => {
     try {
       const roomId = c.var.roomId;
       const getMessagesResult = await getMessagesDb(roomId);
@@ -32,7 +33,7 @@ const app = new Hono()
       });
     }
   })
-  .post("/", authMiddleware, validateCreateMessage, async (c) => {
+  .post("/", validateCreateMessage, async (c) => {
     try {
       const user = c.var.user;
       const body = c.var.validatedData;
@@ -68,13 +69,13 @@ const app = new Hono()
       );
     }
   })
-  .patch("/:messageId", authMiddleware, async (c) => {
+  .patch("/:messageId", async (c) => {
     return c.json({
       success: true,
       notifs: ["Successfully edited message"],
     });
   })
-  .delete("/:messageId", authMiddleware, async (c) => {
+  .delete("/:messageId", async (c) => {
     return c.json({
       success: true,
       notifs: ["Successfully deleted message"],
