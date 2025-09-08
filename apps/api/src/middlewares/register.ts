@@ -1,10 +1,9 @@
 import { getEmailDb, getUsernameDb } from "#db/query";
-import { registerValidator, type registerEnv } from "@repo/types/user";
-import type { Context, MiddlewareHandler, Next } from "hono";
+import { registerValidator, type RegisterEnv } from "@repo/types/user";
 import { createMiddleware } from "hono/factory";
 
-export const useValidateRegister = (): MiddlewareHandler<registerEnv> => {
-  return createMiddleware<registerEnv>(async (c: Context, next: Next) => {
+export const validateRegisterMiddleware = createMiddleware<RegisterEnv>(
+  async (c, next) => {
     const body = await c.req.json();
     const result = registerValidator.safeParse(body);
 
@@ -52,5 +51,5 @@ export const useValidateRegister = (): MiddlewareHandler<registerEnv> => {
 
     c.set("validatedData", result.data);
     await next();
-  });
-};
+  }
+);

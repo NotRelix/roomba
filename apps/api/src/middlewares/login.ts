@@ -1,11 +1,10 @@
 import { getUsernameDb } from "#db/query";
-import { loginValidator, type loginEnv } from "@repo/types/user";
+import { loginValidator, type LoginEnv } from "@repo/types/user";
 import { compare } from "bcrypt-ts";
-import type { MiddlewareHandler, Context, Next } from "hono";
 import { createMiddleware } from "hono/factory";
 
-export const useValidateLogin = (): MiddlewareHandler<loginEnv> => {
-  return createMiddleware<loginEnv>(async (c: Context, next: Next) => {
+export const validateLoginMiddleware = createMiddleware<LoginEnv>(
+  async (c, next) => {
     const body = await c.req.json();
     const result = loginValidator.safeParse(body);
     const errorMessage = {
@@ -35,5 +34,5 @@ export const useValidateLogin = (): MiddlewareHandler<loginEnv> => {
 
     c.set("user", user);
     await next();
-  });
-};
+  }
+);

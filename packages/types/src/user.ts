@@ -7,13 +7,13 @@ export type userPayloadEnv = {
   };
 };
 
-export type registerEnv = {
+export type RegisterEnv = {
   Variables: {
     validatedData: registerType;
   };
 };
 
-export type loginEnv = {
+export type LoginEnv = {
   Variables: {
     user: SelectUser;
   };
