@@ -18,8 +18,9 @@ describe("Get messages test", () => {
 
     const roomResult = await createRoom(room1, user.data.token);
     await createMessage(message1, roomResult.data.room.id, user.data.token);
-    const result = await getMessages(roomResult.data.room.id, fakeToken);
-    expect(result.success).toBeFalsy();
+    await expect(
+      getMessages(roomResult.data.room.id, fakeToken)
+    ).rejects.toThrow("Invalid token");
   });
 
   it("should prevent unauthenticated users", async () => {
@@ -27,9 +28,9 @@ describe("Get messages test", () => {
 
     const roomResult = await createRoom(room1, user.data.token);
     await createMessage(message1, roomResult.data.room.id, user.data.token);
-    const result = await getMessages(roomResult.data.room.id);
-
-    expect(result.success).toBeFalsy();
+    await expect(getMessages(roomResult.data.room.id)).rejects.toThrow(
+      "Unauthorized access"
+    );
   });
 
   it("should get message", async () => {

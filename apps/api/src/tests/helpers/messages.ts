@@ -1,5 +1,8 @@
 import type { createMessageType } from "@repo/types/message";
-import app from "#index";
+import app, { type AppType } from "#index";
+import { testClient } from "hono/testing";
+
+const client = testClient<AppType>(app);
 
 export const getMessages = async (roomId: number | string, token?: string) => {
   const headers: HeadersInit = {
@@ -10,12 +13,15 @@ export const getMessages = async (roomId: number | string, token?: string) => {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const response = await app.request(`/rooms/${roomId}/messages`, {
-    method: "GET",
-    headers: new Headers(headers),
-  });
+  const response = await client.rooms[":roomId"].messages.$get(
+    { param: { roomId: String(roomId) } },
+    { headers }
+  );
 
   const result = await response.json();
+  if (!result.success) {
+    throw new Error(result.notifs[0]);
+  }
   return result;
 };
 
