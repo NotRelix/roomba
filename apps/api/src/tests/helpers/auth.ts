@@ -1,11 +1,11 @@
 import type { loginType, registerType } from "@repo/types/user";
-import auth from "#routes/auth";
 import { testClient } from "hono/testing";
+import app, { type AppType } from "#index";
 
-const client = testClient(auth);
+const client = testClient<AppType>(app);
 
 export const registerUser = async (user: registerType) => {
-  const response = await client.register.$post({ json: user });
+  const response = await client.auth.register.$post({ json: user });
   const result = await response.json();
   if (!result.success) {
     throw new Error(result.notifs[0]);
@@ -14,7 +14,7 @@ export const registerUser = async (user: registerType) => {
 };
 
 export const loginUser = async (user: loginType) => {
-  const response = await client.login.$post({ json: user });
+  const response = await client.auth.login.$post({ json: user });
   const result = await response.json();
   if (!result.success) {
     throw new Error(result.notifs[0]);

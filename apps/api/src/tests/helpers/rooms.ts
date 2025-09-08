@@ -1,9 +1,8 @@
 import type { createRoomType } from "@repo/types/rooms";
-import app from "#index";
-import rooms from "#routes/rooms";
+import app, { type AppType } from "#index";
 import { testClient } from "hono/testing";
 
-const client = testClient(rooms);
+const client = testClient<AppType>(app);
 
 export const createRoom = async (room: createRoomType, token?: string) => {
   const headers: HeadersInit = {
@@ -14,7 +13,7 @@ export const createRoom = async (room: createRoomType, token?: string) => {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const response = await client.index.$post({ json: room }, { headers });
+  const response = await client.rooms.$post({ json: room }, { headers });
 
   const result = await response.json();
   if (!result.success) {
