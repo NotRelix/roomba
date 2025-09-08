@@ -5,7 +5,11 @@ import {
   useValidateGetMessages,
 } from "#middlewares/messages";
 import type { InsertMessage } from "@repo/shared/types";
-import type { ApiResponse, GetMessagesData } from "@repo/types/api";
+import type {
+  ApiResponse,
+  CreateMessageData,
+  GetMessagesData,
+} from "@repo/types/api";
 import { createFactory } from "hono/factory";
 
 const factory = createFactory();
@@ -52,17 +56,19 @@ export const createMessageHandler = factory.createHandlers(
       const createMessageResult = await createMessageDb(newMessage);
       const { password, ...cleanAuthor } = author;
 
-      return c.json(
+      return c.json<ApiResponse<CreateMessageData>>(
         {
           success: true,
-          author: cleanAuthor,
-          message: createMessageResult,
           notifs: ["Successfully created a message"],
+          data: {
+            author: cleanAuthor,
+            message: createMessageResult,
+          },
         },
         201
       );
     } catch (err) {
-      return c.json(
+      return c.json<ApiResponse>(
         {
           success: false,
           notifs: ["Failed to create message"],

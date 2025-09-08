@@ -24,10 +24,6 @@ export type RegisterData = {
   token: string;
 };
 
-export type GetMessagesData = {
-  messages: MessageWithAuthor[];
-};
-
 export type CreateRoomData = {
   user: safeUser;
   room: SelectRoom;
@@ -35,3 +31,12 @@ export type CreateRoomData = {
 };
 
 export type JoinRoomData = CreateRoomData;
+
+export type GetMessagesData = {
+  messages: MessageWithAuthor[];
+};
+
+export type CreateMessageData = {
+  author: safeUser;
+  message: SelectMessage | null;
+};

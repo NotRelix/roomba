@@ -40,18 +40,17 @@ describe("Create message test", () => {
       user.data.token
     );
 
-    expect(result1.message.message).toBe(message1.message);
-    expect(result2.message.message).toBe(message2.message);
+    expect(result1.data.message!.message).toBe(message1.message);
+    expect(result2.data.message!.message).toBe(message2.message);
   });
 
   it("should prevent unauthenticated users", async () => {
     const user = await registerUser(registerUser1);
 
     const roomResult = await createRoom(room1, user.data.token);
-    const result = await createMessage(message1, roomResult.data.room.id);
-
-    expect(result.success).toBeFalsy();
-    expect(result.notifs[0]).toBe("Unauthorized access");
+    await expect(
+      createMessage(message1, roomResult.data.room.id)
+    ).rejects.toThrow("Unauthorized access");
   });
 
   it("should prevent fake tokens", async () => {
@@ -59,14 +58,9 @@ describe("Create message test", () => {
 
     const fakeToken = "thisisafaketoken";
     const roomResult = await createRoom(room1, user.data.token);
-    const result = await createMessage(
-      message1,
-      roomResult.data.room.id,
-      fakeToken
-    );
-
-    expect(result.success).toBeFalsy();
-    expect(result.notifs[0]).toBe("Invalid token");
+    await expect(
+      createMessage(message1, roomResult.data.room.id, fakeToken)
+    ).rejects.toThrow("Invalid token");
   });
 
   it("should prevent sending messages when not in the room", async () => {
@@ -79,16 +73,12 @@ describe("Create message test", () => {
       roomResult.data.room.id,
       user1.data.token
     );
-    const messageResult2 = await createMessage(
-      message2,
-      roomResult.data.room.id,
-      user2.data.token
-    );
 
     expect(messageResult1.success).toBeTruthy();
-    expect(messageResult1.message.message).toBe(message1.message);
-    expect(messageResult2.success).toBeFalsy();
-    expect(messageResult2.notifs[0]).toBe("Forbidden access");
+    expect(messageResult1.data.message!.message).toBe(message1.message);
+    await expect(
+      createMessage(message2, roomResult.data.room.id, user2.data.token)
+    ).rejects.toThrow("Forbidden access");
   });
 
   it("should prevent sending messages on different rooms that users created", async () => {
@@ -98,21 +88,13 @@ describe("Create message test", () => {
     const roomResult1 = await createRoom(room1, user1.data.token);
     const roomResult2 = await createRoom(room2, user2.data.token);
 
-    const messageResult1 = await createMessage(
-      message1,
-      roomResult1.data.room.id,
-      user2.data.token
-    );
-    const messageResult2 = await createMessage(
-      message1,
-      roomResult2.data.room.id,
-      user1.data.token
-    );
+    await expect(
+      createMessage(message1, roomResult1.data.room.id, user2.data.token)
+    ).rejects.toThrow("Forbidden access");
 
-    expect(messageResult1.success).toBeFalsy();
-    expect(messageResult1.notifs[0]).toBe("Forbidden access");
-    expect(messageResult2.success).toBeFalsy();
-    expect(messageResult2.notifs[0]).toBe("Forbidden access");
+    await expect(
+      createMessage(message1, roomResult2.data.room.id, user1.data.token)
+    ).rejects.toThrow("Forbidden access");
   });
 
   it("should allow sending messages after joining the room", async () => {
@@ -138,12 +120,12 @@ describe("Create message test", () => {
     );
 
     expect(messageResult1.success).toBeTruthy();
-    expect(messageResult1.author.username).toBe(registerUser1.username);
-    expect(messageResult1.message.message).toBe(message1.message);
+    expect(messageResult1.data.author.username).toBe(registerUser1.username);
+    expect(messageResult1.data.message!.message).toBe(message1.message);
 
     expect(messageResult2.success).toBeTruthy();
-    expect(messageResult2.author.username).toBe(registerUser2.username);
-    expect(messageResult2.message.message).toBe(message2.message);
+    expect(messageResult2.data.author.username).toBe(registerUser2.username);
+    expect(messageResult2.data.message!.message).toBe(message2.message);
     expect(joinRoomResult.data.room.id).toBe(roomResult.data.room.id);
   });
 
@@ -152,13 +134,9 @@ describe("Create message test", () => {
 
     await createRoom(room1, user.data.token);
     const invalidRoomId = "ABC";
-    const result = await createMessage(
-      message1,
-      invalidRoomId,
-      user.data.token
-    );
-
-    expect(result.success).toBeFalsy();
+    await expect(
+      createMessage(message1, invalidRoomId, user.data.token)
+    ).rejects.toThrow("Invalid room ID");
   });
 
   it("should prevent sending messages on an invalid room ID (very big number)", async () => {
@@ -166,13 +144,9 @@ describe("Create message test", () => {
 
     await createRoom(room1, user.data.token);
     const invalidRoomId = 1034982347978;
-    const result = await createMessage(
-      message1,
-      invalidRoomId,
-      user.data.token
-    );
-
-    expect(result.success).toBeFalsy();
+    await expect(
+      createMessage(message1, invalidRoomId, user.data.token)
+    ).rejects.toThrow("Invalid room ID");
   });
 
   it("should prevent sending messages on an invalid room ID (number)", async () => {
@@ -180,12 +154,8 @@ describe("Create message test", () => {
 
     await createRoom(room1, user.data.token);
     const invalidRoomId = 12300;
-    const result = await createMessage(
-      message1,
-      invalidRoomId,
-      user.data.token
-    );
-
-    expect(result.success).toBeFalsy();
+    await expect(
+      createMessage(message1, invalidRoomId, user.data.token)
+    ).rejects.toThrow("Forbidden access");
   });
 });

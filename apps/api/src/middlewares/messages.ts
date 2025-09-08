@@ -1,4 +1,5 @@
 import { getAuthorDb, getUserInRoomDb } from "#db/query";
+import type { ApiResponse } from "@repo/types/api";
 import {
   createMessageValidator,
   type createMessageEnv,
@@ -49,7 +50,7 @@ export const useValidateCreateMessage =
         const result = createMessageValidator.safeParse(body);
 
         if (roomId >= INT_MAX || isNaN(roomId)) {
-          return c.json(
+          return c.json<ApiResponse>(
             {
               success: false,
               notifs: ["Invalid room ID"],
@@ -59,7 +60,7 @@ export const useValidateCreateMessage =
         }
 
         if (!result.success) {
-          return c.json(
+          return c.json<ApiResponse>(
             {
               success: false,
               notifs: result.error!.issues.map((message) => message.message),
@@ -71,7 +72,7 @@ export const useValidateCreateMessage =
         const user = c.get("user");
         const author = await getAuthorDb(user.id);
         if (!author) {
-          return c.json(
+          return c.json<ApiResponse>(
             {
               success: false,
               notifs: ["Invalid user"],
@@ -82,7 +83,7 @@ export const useValidateCreateMessage =
 
         const isUserJoined = await getUserInRoomDb(user.id, roomId);
         if (!isUserJoined) {
-          return c.json(
+          return c.json<ApiResponse>(
             {
               success: false,
               notifs: ["Forbidden access"],

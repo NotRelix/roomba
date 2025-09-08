@@ -38,12 +38,20 @@ export const createMessage = async (
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const response = await app.request(`/rooms/${roomId}/messages`, {
-    method: "POST",
-    headers: new Headers(headers),
-    body: JSON.stringify(message),
-  });
+  const response = await client.rooms[":roomId"].messages.$post(
+    {
+      param: { roomId: String(roomId) },
+      // @ts-expect-error
+      json: message,
+    },
+    {
+      headers,
+    }
+  );
 
   const result = await response.json();
+  if (!result.success) {
+    throw new Error(result.notifs[0]);
+  }
   return result;
 };
