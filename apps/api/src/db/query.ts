@@ -138,13 +138,13 @@ export const createRoomDb = async (
 export const editRoomDb = async (
   roomId: number,
   body: InsertRoom
-): Promise<SelectRoom | null> => {
+): Promise<SelectRoom> => {
   const [room] = await db
     .update(roomsTable)
     .set(body)
     .where(eq(roomsTable.id, roomId))
     .returning();
-  return room ?? null;
+  return room;
 };
 
 export const getMessagesDb = async (

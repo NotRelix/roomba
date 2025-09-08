@@ -55,15 +55,6 @@ const app = new Hono()
       const roomId = c.var.roomId;
 
       const editRoomResult = await editRoomDb(roomId, body);
-      if (!editRoomResult) {
-        return c.json(
-          {
-            success: false,
-            notifs: ["Room not found"],
-          },
-          404
-        );
-      }
 
       return c.json<ApiResponse<EditRoomData>>(
         {

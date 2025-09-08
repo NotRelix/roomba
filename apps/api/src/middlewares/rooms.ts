@@ -109,6 +109,17 @@ export const validateEditRoom = createMiddleware<EditRoomEnv>(
       );
     }
 
+    const room = await getRoomDb(roomId);
+    if (!room) {
+      return c.json(
+        {
+          success: false,
+          notifs: ["Room not found"],
+        },
+        404
+      );
+    }
+
     c.set("validatedData", result.data);
     c.set("roomId", roomId);
     await next();
