@@ -1,10 +1,10 @@
-import type { createRoomType } from "@repo/types/rooms";
+import type { CreateRoomType } from "@repo/types/rooms";
 import app, { type AppType } from "#index";
 import { testClient } from "hono/testing";
 
 const client = testClient<AppType>(app);
 
-export const createRoom = async (room: createRoomType, token?: string) => {
+export const createRoom = async (room: CreateRoomType, token?: string) => {
   const headers: HeadersInit = {
     "Content-Type": "application/json",
   };

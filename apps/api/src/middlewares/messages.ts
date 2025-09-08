@@ -2,16 +2,15 @@ import { getAuthorDb, getUserInRoomDb } from "#db/query";
 import type { ApiResponse } from "@repo/types/api";
 import {
   createMessageValidator,
-  type createMessageEnv,
-  type getMessagesEnv,
+  type CreateMessageEnv,
+  type GetMessagesEnv,
 } from "@repo/types/message";
-import type { Context, MiddlewareHandler, Next } from "hono";
 import { createMiddleware } from "hono/factory";
 
 const INT_MAX = 2 ** 31 - 1;
 
-export const useValidateGetMessages = (): MiddlewareHandler<getMessagesEnv> => {
-  return createMiddleware<getMessagesEnv>(async (c: Context, next: Next) => {
+export const validateGetMessages = createMiddleware<GetMessagesEnv>(
+  async (c, next) => {
     const roomId = Number(c.req.param("roomId"));
 
     if (roomId >= INT_MAX || isNaN(roomId)) {
@@ -24,7 +23,7 @@ export const useValidateGetMessages = (): MiddlewareHandler<getMessagesEnv> => {
       );
     }
 
-    const user = c.get("user");
+    const user = c.var.user;
     const isUserJoined = await getUserInRoomDb(user.id, roomId);
     if (!isUserJoined) {
       return c.json(
@@ -38,64 +37,61 @@ export const useValidateGetMessages = (): MiddlewareHandler<getMessagesEnv> => {
 
     c.set("roomId", roomId);
     await next();
-  });
-};
+  }
+);
 
-export const useValidateCreateMessage =
-  (): MiddlewareHandler<createMessageEnv> => {
-    return createMiddleware<createMessageEnv>(
-      async (c: Context, next: Next) => {
-        const body = await c.req.json();
-        const roomId = Number(c.req.param("roomId"));
-        const result = createMessageValidator.safeParse(body);
+export const validateCreateMessage = createMiddleware<CreateMessageEnv>(
+  async (c, next) => {
+    const body = await c.req.json();
+    const roomId = Number(c.req.param("roomId"));
+    const result = createMessageValidator.safeParse(body);
 
-        if (roomId >= INT_MAX || isNaN(roomId)) {
-          return c.json<ApiResponse>(
-            {
-              success: false,
-              notifs: ["Invalid room ID"],
-            },
-            400
-          );
-        }
+    if (roomId >= INT_MAX || isNaN(roomId)) {
+      return c.json<ApiResponse>(
+        {
+          success: false,
+          notifs: ["Invalid room ID"],
+        },
+        400
+      );
+    }
 
-        if (!result.success) {
-          return c.json<ApiResponse>(
-            {
-              success: false,
-              notifs: result.error!.issues.map((message) => message.message),
-            },
-            400
-          );
-        }
+    if (!result.success) {
+      return c.json<ApiResponse>(
+        {
+          success: false,
+          notifs: result.error!.issues.map((message) => message.message),
+        },
+        400
+      );
+    }
 
-        const user = c.get("user");
-        const author = await getAuthorDb(user.id);
-        if (!author) {
-          return c.json<ApiResponse>(
-            {
-              success: false,
-              notifs: ["Invalid user"],
-            },
-            400
-          );
-        }
+    const user = c.var.user;
+    const author = await getAuthorDb(user.id);
+    if (!author) {
+      return c.json<ApiResponse>(
+        {
+          success: false,
+          notifs: ["Invalid user"],
+        },
+        400
+      );
+    }
 
-        const isUserJoined = await getUserInRoomDb(user.id, roomId);
-        if (!isUserJoined) {
-          return c.json<ApiResponse>(
-            {
-              success: false,
-              notifs: ["Forbidden access"],
-            },
-            403
-          );
-        }
+    const isUserJoined = await getUserInRoomDb(user.id, roomId);
+    if (!isUserJoined) {
+      return c.json<ApiResponse>(
+        {
+          success: false,
+          notifs: ["Forbidden access"],
+        },
+        403
+      );
+    }
 
-        c.set("validatedData", result.data);
-        c.set("author", author);
-        c.set("roomId", roomId);
-        await next();
-      }
-    );
-  };
+    c.set("validatedData", result.data);
+    c.set("author", author);
+    c.set("roomId", roomId);
+    await next();
+  }
+);

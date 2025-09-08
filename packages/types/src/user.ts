@@ -1,15 +1,15 @@
 import z from "zod";
 import { SelectUser } from "@repo/shared/types";
 
-export type userPayloadEnv = {
+export type UserPayloadEnv = {
   Variables: {
-    user: userPayloadType;
+    user: UserPayloadType;
   };
 };
 
 export type RegisterEnv = {
   Variables: {
-    validatedData: registerType;
+    validatedData: RegisterType;
   };
 };
 
@@ -19,17 +19,17 @@ export type LoginEnv = {
   };
 };
 
-export type userPayloadType = {
+export type UserPayloadType = {
   id: number;
   sub: string;
   exp: number;
 };
 
-export type registerType = z.infer<typeof registerValidator>;
+export type RegisterType = z.infer<typeof registerValidator>;
 
-export type loginType = z.infer<typeof loginValidator>;
+export type LoginType = z.infer<typeof loginValidator>;
 
-export type safeUser = Omit<SelectUser, "password">;
+export type SafeUser = Omit<SelectUser, "password">;
 
 export const registerValidator = z.object({
   firstName: z

@@ -1,10 +1,10 @@
-import type { loginType, registerType } from "@repo/types/user";
+import type { LoginType, RegisterType } from "@repo/types/user";
 import { testClient } from "hono/testing";
 import app, { type AppType } from "#index";
 
 const client = testClient<AppType>(app);
 
-export const registerUser = async (user: registerType) => {
+export const registerUser = async (user: RegisterType) => {
   const response = await client.auth.register.$post({ json: user });
   const result = await response.json();
   if (!result.success) {
@@ -13,7 +13,7 @@ export const registerUser = async (user: registerType) => {
   return result;
 };
 
-export const loginUser = async (user: loginType) => {
+export const loginUser = async (user: LoginType) => {
   const response = await client.auth.login.$post({ json: user });
   const result = await response.json();
   if (!result.success) {

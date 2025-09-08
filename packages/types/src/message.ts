@@ -1,21 +1,24 @@
 import { SelectMessage, SelectUser } from "@repo/shared/types";
 import z from "zod";
+import { UserPayloadType } from "./user.js";
 
-export type getMessagesEnv = {
+export type GetMessagesEnv = {
   Variables: {
+    user: UserPayloadType;
     roomId: number;
   };
 };
 
-export type createMessageEnv = {
+export type CreateMessageEnv = {
   Variables: {
-    validatedData: createMessageType;
+    user: UserPayloadType;
+    validatedData: CreateMessageType;
     author: SelectUser;
     roomId: number;
   };
 };
 
-export type createMessageType = z.infer<typeof createMessageValidator>;
+export type CreateMessageType = z.infer<typeof createMessageValidator>;
 
 export type MessageWithAuthor = {
   message: SelectMessage;

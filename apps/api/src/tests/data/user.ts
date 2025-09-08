@@ -1,7 +1,7 @@
-import type { loginType, registerType } from "@repo/types/user";
+import type { LoginType, RegisterType } from "@repo/types/user";
 
 // Register User
-export const registerUser1: registerType = {
+export const registerUser1: RegisterType = {
   firstName: "dummy1",
   lastName: "dummy1",
   username: "dummy1",
@@ -9,7 +9,7 @@ export const registerUser1: registerType = {
   password: "dummypassword",
   confirmPassword: "dummypassword",
 };
-export const registerUser2: registerType = {
+export const registerUser2: RegisterType = {
   firstName: "dummy2",
   lastName: "dummy2",
   username: "dummy2",
@@ -17,7 +17,7 @@ export const registerUser2: registerType = {
   password: "dummypassword",
   confirmPassword: "dummypassword",
 };
-export const duplicateUsername: registerType = {
+export const duplicateUsername: RegisterType = {
   firstName: "dummy3",
   lastName: "dummy3",
   username: "dummy1",
@@ -25,7 +25,7 @@ export const duplicateUsername: registerType = {
   password: "dummypassword",
   confirmPassword: "dummypassword",
 };
-export const duplicateEmail: registerType = {
+export const duplicateEmail: RegisterType = {
   firstName: "dummy4",
   lastName: "dummy4",
   username: "dummy4",
@@ -33,7 +33,7 @@ export const duplicateEmail: registerType = {
   password: "dummypassword",
   confirmPassword: "dummypassword",
 };
-export const wrongPassword: registerType = {
+export const wrongPassword: RegisterType = {
   firstName: "dummy5",
   lastName: "dummy5",
   username: "dummy5",
@@ -43,19 +43,19 @@ export const wrongPassword: registerType = {
 };
 
 // Login User
-export const loginUser1: loginType = {
+export const loginUser1: LoginType = {
   username: "dummy1",
   password: "dummypassword",
 };
-export const loginUser2: loginType = {
+export const loginUser2: LoginType = {
   username: "dummy2",
   password: "dummypassword",
 };
-export const loginWrongUsername: loginType = {
+export const loginWrongUsername: LoginType = {
   username: "wrongusername",
   password: "dummypassword",
 };
-export const loginWrongPassword: loginType = {
+export const loginWrongPassword: LoginType = {
   username: "dummy1",
   password: "wrongpassword",
 };

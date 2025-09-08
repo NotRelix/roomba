@@ -1,4 +1,4 @@
-import type { createMessageType } from "@repo/types/message";
+import type { CreateMessageType } from "@repo/types/message";
 import app, { type AppType } from "#index";
 import { testClient } from "hono/testing";
 
@@ -26,7 +26,7 @@ export const getMessages = async (roomId: number | string, token?: string) => {
 };
 
 export const createMessage = async (
-  message: createMessageType,
+  message: CreateMessageType,
   roomId: number | string,
   token?: string
 ) => {

@@ -1,5 +1,5 @@
 import { SelectMessage, SelectRoom, SelectUser } from "@repo/shared/types";
-import { safeUser } from "@repo/types/user";
+import { SafeUser } from "@repo/types/user";
 import { MessageWithAuthor } from "./message.js";
 
 export type ApiSuccess<T = void> = {
@@ -20,12 +20,12 @@ export type LoginData = {
 };
 
 export type RegisterData = {
-  user: safeUser;
+  user: SafeUser;
   token: string;
 };
 
 export type CreateRoomData = {
-  user: safeUser;
+  user: SafeUser;
   room: SelectRoom;
   isAdmin: boolean;
 };
@@ -37,6 +37,6 @@ export type GetMessagesData = {
 };
 
 export type CreateMessageData = {
-  author: safeUser;
+  author: SafeUser;
   message: SelectMessage | null;
 };

@@ -1,13 +1,16 @@
 import { getRoomDb, getUserInRoomDb } from "#db/query";
-import { createRoomValidator, type createRoomEnv } from "@repo/types/rooms";
-import type { Context, MiddlewareHandler, Next } from "hono";
+import {
+  createRoomValidator,
+  type JoinRoomEnv,
+  type CreateRoomEnv,
+} from "@repo/types/rooms";
 import { createMiddleware } from "hono/factory";
 
 const INT_MAX = 2 ** 31 - 1;
 
-export const useValidJoinRoom = (): MiddlewareHandler => {
-  return createMiddleware(async (c: Context, next: Next) => {
-    const user = c.get("user");
+export const validateJoinRoom = createMiddleware<JoinRoomEnv>(
+  async (c, next) => {
+    const user = c.var.user;
     const roomId = Number(c.req.param("roomId"));
 
     if (roomId >= INT_MAX || isNaN(roomId)) {
@@ -53,12 +56,13 @@ export const useValidJoinRoom = (): MiddlewareHandler => {
       );
     }
 
+    c.set("roomId", roomId);
     await next();
-  });
-};
+  }
+);
 
-export const useValidateCreateRoom = (): MiddlewareHandler<createRoomEnv> => {
-  return createMiddleware<createRoomEnv>(async (c: Context, next: Next) => {
+export const validateCreateRoom = createMiddleware<CreateRoomEnv>(
+  async (c, next) => {
     const body = await c.req.json();
     const result = createRoomValidator.safeParse(body);
 
@@ -71,8 +75,8 @@ export const useValidateCreateRoom = (): MiddlewareHandler<createRoomEnv> => {
         400
       );
     }
-
+    
     c.set("validatedData", result.data);
     await next();
-  });
-};
+  }
+);
