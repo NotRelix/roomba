@@ -16,6 +16,7 @@ export type JoinRoomEnv = {
 
 export type EditRoomEnv = {
   Variables: {
+    user: UserPayloadType;
     validatedData: EditRoomType;
     roomId: number;
   };

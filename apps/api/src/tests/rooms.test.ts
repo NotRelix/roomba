@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { resetDb } from "@repo/helpers/db";
 import { registerUser } from "#tests/helpers/auth";
 import { registerUser1, registerUser2 } from "#tests/data/user";
-import { createRoom, joinRoom } from "#tests/helpers/rooms";
+import { createRoom, editRoom, joinRoom } from "#tests/helpers/rooms";
 import { privateRoom1, room1, room2 } from "#tests/data/rooms";
 
 beforeEach(async () => {
@@ -121,5 +121,54 @@ describe("Join rooms test", () => {
     await expect(
       joinRoom(roomResult.data.room.id, user2.data.token)
     ).rejects.toThrow("Can't join a private room");
+  });
+});
+
+describe("Edit room test", () => {
+  it("should edit the room", async () => {
+    const user = await registerUser(registerUser1);
+
+    const roomResult = await createRoom(room1, user.data.token);
+
+    const editResult = await editRoom(
+      roomResult.data.room.id,
+      room2,
+      user.data.token
+    );
+
+    expect(editResult.success).toBeTruthy();
+    expect(editResult.data.room.name).toBe(room2.name);
+    expect(editResult.data.room.isPrivate).toBeFalsy();
+  });
+
+  it("should not edit non existing rooms", async () => {
+    const user = await registerUser(registerUser1);
+    const fakeRoomId = 132;
+
+    await expect(editRoom(fakeRoomId, room2, user.data.token)).rejects.toThrow(
+      "Room not found"
+    );
+  });
+
+  it("should restrict normal users in the room from editing", async () => {
+    const user1 = await registerUser(registerUser1);
+    const user2 = await registerUser(registerUser2);
+
+    const roomResult = await createRoom(room1, user1.data.token);
+    await joinRoom(roomResult.data.room.id, user2.data.token);
+
+    await expect(
+      editRoom(roomResult.data.room.id, room2, user2.data.token)
+    ).rejects.toThrow("Unauthorized access");
+  });
+
+  it("should restrict users outside of the room", async () => {
+    const user1 = await registerUser(registerUser1);
+    const user2 = await registerUser(registerUser2);
+
+    const roomResult = await createRoom(room1, user1.data.token);
+    await expect(
+      editRoom(roomResult.data.room.id, room2, user2.data.token)
+    ).rejects.toThrow("Unauthorized access");
   });
 });

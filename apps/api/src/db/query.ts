@@ -17,6 +17,19 @@ import {
 import { and, eq } from "drizzle-orm";
 import type { MessageWithAuthor } from "@repo/types/message";
 
+export const isRoomAdminDb = async (
+  roomId: number,
+  userId: number
+): Promise<boolean> => {
+  const [isAdmin] = await db
+    .select({ admin: usersToRooms.isAdmin })
+    .from(usersToRooms)
+    .where(
+      and(eq(usersToRooms.roomId, roomId), eq(usersToRooms.userId, userId))
+    );
+  return isAdmin.admin;
+};
+
 export const getUsernameDb = async (
   username: string
 ): Promise<SelectUser | null> => {

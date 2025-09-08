@@ -1,4 +1,4 @@
-import { getRoomDb, getUserInRoomDb } from "#db/query";
+import { getRoomDb, getUserInRoomDb, isRoomAdminDb } from "#db/query";
 import {
   createRoomValidator,
   editRoomValidator,
@@ -85,6 +85,7 @@ export const validateCreateRoom = createMiddleware<CreateRoomEnv>(
 
 export const validateEditRoom = createMiddleware<EditRoomEnv>(
   async (c, next) => {
+    const user = c.var.user;
     const body = await c.req.json();
     const roomId = Number(c.req.param("roomId"));
     const result = editRoomValidator.safeParse(body);
@@ -117,6 +118,28 @@ export const validateEditRoom = createMiddleware<EditRoomEnv>(
           notifs: ["Room not found"],
         },
         404
+      );
+    }
+
+    const isUserJoined = await getUserInRoomDb(user.id, roomId);
+    if (!isUserJoined) {
+      return c.json(
+        {
+          success: false,
+          notifs: ["Unauthorized access"],
+        },
+        400
+      );
+    }
+
+    const isAdmin = await isRoomAdminDb(roomId, user.id);
+    if (!isAdmin) {
+      return c.json(
+        {
+          success: false,
+          notifs: ["Unauthorized access"],
+        },
+        400
       );
     }
 
