@@ -1,6 +1,7 @@
 import { createRoomDb, joinRoomDb } from "#db/query";
 import { useAuth } from "#middlewares/auth";
 import { useValidateCreateRoom, useValidJoinRoom } from "#middlewares/rooms";
+import type { ApiResponse, CreateRoomData } from "@repo/types/api";
 import { createFactory } from "hono/factory";
 
 const factory = createFactory();
@@ -15,24 +16,27 @@ export const createRoomHandler = factory.createHandlers(
 
       const createRoomResult = await createRoomDb(user.id, body);
       if (!createRoomResult) {
-        return c.json(
+        return c.json<ApiResponse>(
           { success: false, notifs: ["Failed to create a room"] },
           500
         );
       }
+
       const { password, ...safeUser } = createRoomResult.user;
-      return c.json(
+      return c.json<ApiResponse<CreateRoomData>>(
         {
           success: true,
-          user: safeUser,
-          room: createRoomResult.room,
-          isAdmin: createRoomResult.isAdmin,
           notifs: ["Successfully created a room"],
+          data: {
+            user: safeUser,
+            room: createRoomResult.room,
+            isAdmin: createRoomResult.isAdmin,
+          },
         },
         201
       );
     } catch (err) {
-      return c.json(
+      return c.json<ApiResponse>(
         { success: false, notifs: ["Failed to create a room"] },
         500
       );

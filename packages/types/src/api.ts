@@ -1,4 +1,4 @@
-import { SelectMessage, SelectUser } from "@repo/shared/types";
+import { SelectMessage, SelectRoom, SelectUser } from "@repo/shared/types";
 import { safeUser } from "@repo/types/user";
 import { MessageWithAuthor } from "./message.js";
 
@@ -26,4 +26,10 @@ export type RegisterData = {
 
 export type GetMessagesData = {
   messages: MessageWithAuthor[];
+};
+
+export type CreateRoomData = {
+  user: safeUser;
+  room: SelectRoom;
+  isAdmin: boolean;
 };

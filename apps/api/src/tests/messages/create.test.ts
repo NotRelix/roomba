@@ -18,7 +18,7 @@ describe("Create message test", () => {
     const roomResult = await createRoom(room1, user.data.token);
     const result = await createMessage(
       message1,
-      roomResult.room.id,
+      roomResult.data.room.id,
       user.data.token
     );
 
@@ -31,12 +31,12 @@ describe("Create message test", () => {
     const roomResult = await createRoom(room1, user.data.token);
     const result1 = await createMessage(
       message1,
-      roomResult.room.id,
+      roomResult.data.room.id,
       user.data.token
     );
     const result2 = await createMessage(
       message2,
-      roomResult.room.id,
+      roomResult.data.room.id,
       user.data.token
     );
 
@@ -48,7 +48,7 @@ describe("Create message test", () => {
     const user = await registerUser(registerUser1);
 
     const roomResult = await createRoom(room1, user.data.token);
-    const result = await createMessage(message1, roomResult.room.id);
+    const result = await createMessage(message1, roomResult.data.room.id);
 
     expect(result.success).toBeFalsy();
     expect(result.notifs[0]).toBe("Unauthorized access");
@@ -59,7 +59,11 @@ describe("Create message test", () => {
 
     const fakeToken = "thisisafaketoken";
     const roomResult = await createRoom(room1, user.data.token);
-    const result = await createMessage(message1, roomResult.room.id, fakeToken);
+    const result = await createMessage(
+      message1,
+      roomResult.data.room.id,
+      fakeToken
+    );
 
     expect(result.success).toBeFalsy();
     expect(result.notifs[0]).toBe("Invalid token");
@@ -72,12 +76,12 @@ describe("Create message test", () => {
     const roomResult = await createRoom(room1, user1.data.token);
     const messageResult1 = await createMessage(
       message1,
-      roomResult.room.id,
+      roomResult.data.room.id,
       user1.data.token
     );
     const messageResult2 = await createMessage(
       message2,
-      roomResult.room.id,
+      roomResult.data.room.id,
       user2.data.token
     );
 
@@ -96,12 +100,12 @@ describe("Create message test", () => {
 
     const messageResult1 = await createMessage(
       message1,
-      roomResult1.room.id,
+      roomResult1.data.room.id,
       user2.data.token
     );
     const messageResult2 = await createMessage(
       message1,
-      roomResult2.room.id,
+      roomResult2.data.room.id,
       user1.data.token
     );
 
@@ -117,16 +121,19 @@ describe("Create message test", () => {
 
     const roomResult = await createRoom(room1, user1.data.token);
 
-    const joinRoomResult = await joinRoom(roomResult.room.id, user2.data.token);
+    const joinRoomResult = await joinRoom(
+      roomResult.data.room.id,
+      user2.data.token
+    );
 
     const messageResult1 = await createMessage(
       message1,
-      roomResult.room.id,
+      roomResult.data.room.id,
       user1.data.token
     );
     const messageResult2 = await createMessage(
       message2,
-      roomResult.room.id,
+      roomResult.data.room.id,
       user2.data.token
     );
 
@@ -137,7 +144,7 @@ describe("Create message test", () => {
     expect(messageResult2.success).toBeTruthy();
     expect(messageResult2.author.username).toBe(registerUser2.username);
     expect(messageResult2.message.message).toBe(message2.message);
-    expect(joinRoomResult.room.id).toBe(roomResult.room.id);
+    expect(joinRoomResult.room.id).toBe(roomResult.data.room.id);
   });
 
   it("should prevent sending messages on an invalid room ID (string)", async () => {

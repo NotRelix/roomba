@@ -17,8 +17,8 @@ describe("Get messages test", () => {
     const user = await registerUser(registerUser1);
 
     const roomResult = await createRoom(room1, user.data.token);
-    await createMessage(message1, roomResult.room.id, user.data.token);
-    const result = await getMessages(roomResult.room.id, fakeToken);
+    await createMessage(message1, roomResult.data.room.id, user.data.token);
+    const result = await getMessages(roomResult.data.room.id, fakeToken);
     expect(result.success).toBeFalsy();
   });
 
@@ -26,8 +26,8 @@ describe("Get messages test", () => {
     const user = await registerUser(registerUser1);
 
     const roomResult = await createRoom(room1, user.data.token);
-    await createMessage(message1, roomResult.room.id, user.data.token);
-    const result = await getMessages(roomResult.room.id);
+    await createMessage(message1, roomResult.data.room.id, user.data.token);
+    const result = await getMessages(roomResult.data.room.id);
 
     expect(result.success).toBeFalsy();
   });
@@ -36,8 +36,8 @@ describe("Get messages test", () => {
     const user = await registerUser(registerUser1);
 
     const roomResult = await createRoom(room1, user.data.token);
-    await createMessage(message1, roomResult.room.id, user.data.token);
-    const result = await getMessages(roomResult.room.id, user.data.token);
+    await createMessage(message1, roomResult.data.room.id, user.data.token);
+    const result = await getMessages(roomResult.data.room.id, user.data.token);
 
     expect(result.success).toBeTruthy();
     expect(result.data.messages.length).toBe(1);
@@ -47,10 +47,10 @@ describe("Get messages test", () => {
     const user = await registerUser(registerUser1);
 
     const roomResult = await createRoom(room1, user.data.token);
-    await createMessage(message1, roomResult.room.id, user.data.token);
-    await createMessage(message2, roomResult.room.id, user.data.token);
-    await createMessage(message1, roomResult.room.id, user.data.token);
-    const result = await getMessages(roomResult.room.id, user.data.token);
+    await createMessage(message1, roomResult.data.room.id, user.data.token);
+    await createMessage(message2, roomResult.data.room.id, user.data.token);
+    await createMessage(message1, roomResult.data.room.id, user.data.token);
+    const result = await getMessages(roomResult.data.room.id, user.data.token);
 
     expect(result.success).toBeTruthy();
     expect(result.data.messages.length).toBe(3);
