@@ -4,7 +4,7 @@ import { Input } from "@repo/ui/components/input";
 
 export default function Home() {
   return (
-    <div className="gap-4 flex">
+    <div className="flex gap-4">
       <Button className="" variant={"default"}>
         no way it worked
       </Button>
