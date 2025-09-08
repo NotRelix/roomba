@@ -7,7 +7,11 @@ import type {
   JoinRoomData,
 } from "@repo/types/api";
 import { authMiddleware } from "#middlewares/auth";
-import { validateCreateRoom, validateJoinRoom } from "#middlewares/rooms";
+import {
+  validateCreateRoom,
+  validateEditRoom,
+  validateJoinRoom,
+} from "#middlewares/rooms";
 
 const app = new Hono()
   .use(authMiddleware)
@@ -42,6 +46,21 @@ const app = new Hono()
         { success: false, notifs: ["Failed to create a room"] },
         500
       );
+    }
+  })
+  .patch("/:roomId", validateEditRoom, async (c) => {
+    try {
+      const roomId = c.var.roomId;
+      console.log(roomId);
+      return c.json({
+        success: true,
+        notifs: ["Successfully edited room"],
+      });
+    } catch (err) {
+      return c.json({
+        success: false,
+        notifs: ["Failed to edit room"],
+      });
     }
   })
   .post("/:roomId/join", validateJoinRoom, async (c) => {

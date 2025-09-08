@@ -1,8 +1,10 @@
 import { getRoomDb, getUserInRoomDb } from "#db/query";
 import {
   createRoomValidator,
+  editRoomValidator,
   type JoinRoomEnv,
   type CreateRoomEnv,
+  type EditRoomEnv,
 } from "@repo/types/rooms";
 import { createMiddleware } from "hono/factory";
 
@@ -75,8 +77,40 @@ export const validateCreateRoom = createMiddleware<CreateRoomEnv>(
         400
       );
     }
-    
+
     c.set("validatedData", result.data);
+    await next();
+  }
+);
+
+export const validateEditRoom = createMiddleware<EditRoomEnv>(
+  async (c, next) => {
+    const body = await c.req.json();
+    const roomId = Number(c.req.param("roomId"));
+    const result = editRoomValidator.safeParse(body);
+
+    if (roomId >= INT_MAX || isNaN(roomId)) {
+      return c.json(
+        {
+          success: false,
+          notifs: ["Invalid room ID"],
+        },
+        400
+      );
+    }
+
+    if (!result.success) {
+      return c.json(
+        {
+          success: false,
+          notifs: result.error!.issues.map((message) => message.message),
+        },
+        400
+      );
+    }
+
+    c.set("validatedData", result.data);
+    c.set("roomId", roomId);
     await next();
   }
 );

@@ -14,9 +14,22 @@ export type JoinRoomEnv = {
   };
 };
 
+export type EditRoomEnv = {
+  Variables: {
+    validatedData: EditRoomType;
+    roomId: number;
+  };
+};
+
 export type CreateRoomType = z.infer<typeof createRoomValidator>;
+
+export type EditRoomType = z.infer<typeof editRoomValidator>;
 
 export const createRoomValidator = z.object({
   name: z.string("Invalid room").trim().min(1, "Room name must not be empty"),
   isPrivate: z.boolean("Invalid room type").default(false).optional(),
+});
+
+export const editRoomValidator = z.object({
+  ...createRoomValidator.shape,
 });
