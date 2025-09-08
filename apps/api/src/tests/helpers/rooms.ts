@@ -31,11 +31,16 @@ export const joinRoom = async (roomId: number | string, token?: string) => {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const response = await app.request(`/rooms/${roomId}/join`, {
-    method: "POST",
-    headers: new Headers(headers),
-  });
+  const response = await client.rooms[":roomId"].join.$post(
+    { param: { roomId: String(roomId) } },
+    {
+      headers: headers,
+    }
+  );
 
   const result = await response.json();
+  if (!result.success) {
+    throw new Error(result.notifs[0]);
+  }
   return result;
 };

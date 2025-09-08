@@ -1,7 +1,11 @@
 import { createRoomDb, joinRoomDb } from "#db/query";
 import { useAuth } from "#middlewares/auth";
 import { useValidateCreateRoom, useValidJoinRoom } from "#middlewares/rooms";
-import type { ApiResponse, CreateRoomData } from "@repo/types/api";
+import type {
+  ApiResponse,
+  CreateRoomData,
+  JoinRoomData,
+} from "@repo/types/api";
 import { createFactory } from "hono/factory";
 
 const factory = createFactory();
@@ -54,7 +58,7 @@ export const joinRoomHandler = factory.createHandlers(
 
       const joinRoomResult = await joinRoomDb(user.id, roomId);
       if (!joinRoomResult) {
-        return c.json(
+        return c.json<ApiResponse>(
           {
             success: false,
             notifs: ["Failed to join room"],
@@ -64,18 +68,23 @@ export const joinRoomHandler = factory.createHandlers(
       }
 
       const { password, ...safeUser } = joinRoomResult.user;
-      return c.json(
+      return c.json<ApiResponse<JoinRoomData>>(
         {
           success: true,
-          user: safeUser,
-          room: joinRoomResult.room,
-          isAdmin: joinRoomResult.isAdmin,
           notifs: ["Successfully joined a room"],
+          data: {
+            user: safeUser,
+            room: joinRoomResult.room,
+            isAdmin: joinRoomResult.isAdmin,
+          },
         },
         200
       );
     } catch (err) {
-      return c.json({ success: false, notifs: ["Failed to join a room"] }, 500);
+      return c.json<ApiResponse>(
+        { success: false, notifs: ["Failed to join a room"] },
+        500
+      );
     }
   }
 );

@@ -53,9 +53,9 @@ describe("Join rooms test", () => {
     );
 
     expect(joinRoomResult.success).toBeTruthy();
-    expect(joinRoomResult.room.name).toBe(room1.name);
-    expect(joinRoomResult.isAdmin).toBeFalsy();
-    expect(joinRoomResult.room.id).toBe(roomResult.data.room.id);
+    expect(joinRoomResult.data.room.name).toBe(room1.name);
+    expect(joinRoomResult.data.isAdmin).toBeFalsy();
+    expect(joinRoomResult.data.room.id).toBe(roomResult.data.room.id);
   });
 
   it("should not join an invalid room (string)", async () => {
@@ -65,10 +65,9 @@ describe("Join rooms test", () => {
     await createRoom(room1, user1.data.token);
 
     const invalidRoomId = "ABC";
-    const joinRoomResult = await joinRoom(invalidRoomId, user2.data.token);
-
-    expect(joinRoomResult.success).toBeFalsy();
-    expect(joinRoomResult.notifs[0]).toBe("Invalid room ID");
+    await expect(joinRoom(invalidRoomId, user2.data.token)).rejects.toThrow(
+      "Invalid room ID"
+    );
   });
 
   it("should not join an invalid room (very big number)", async () => {
@@ -78,10 +77,9 @@ describe("Join rooms test", () => {
     await createRoom(room1, user1.data.token);
 
     const invalidRoomId = 100232123123123;
-    const joinRoomResult = await joinRoom(invalidRoomId, user2.data.token);
-
-    expect(joinRoomResult.success).toBeFalsy();
-    expect(joinRoomResult.notifs[0]).toBe("Invalid room ID");
+    await expect(joinRoom(invalidRoomId, user2.data.token)).rejects.toThrow(
+      "Invalid room ID"
+    );
   });
 
   it("should not join an invalid room (number)", async () => {
@@ -91,10 +89,9 @@ describe("Join rooms test", () => {
     await createRoom(room1, user1.data.token);
 
     const invalidRoomId = 102093;
-    const joinRoomResult = await joinRoom(invalidRoomId, user2.data.token);
-
-    expect(joinRoomResult.success).toBeFalsy();
-    expect(joinRoomResult.notifs[0]).toBe("Room doesn't exist");
+    await expect(joinRoom(invalidRoomId, user2.data.token)).rejects.toThrow(
+      "Room doesn't exist"
+    );
   });
 
   it("should not join the same room", async () => {
@@ -107,15 +104,12 @@ describe("Join rooms test", () => {
       roomResult.data.room.id,
       user2.data.token
     );
-    const joinRoomResult2 = await joinRoom(
-      roomResult.data.room.id,
-      user2.data.token
-    );
 
     expect(joinRoomResult1.success).toBeTruthy();
-    expect(joinRoomResult1.room.name).toBe(room1.name);
-    expect(joinRoomResult2.success).toBeFalsy();
-    expect(joinRoomResult2.notifs[0]).toBe("User is already in the room");
+    expect(joinRoomResult1.data.room.name).toBe(room1.name);
+    await expect(
+      joinRoom(roomResult.data.room.id, user2.data.token)
+    ).rejects.toThrow("User is already in the room");
   });
 
   it("should prevent users from joining a private room", async () => {
@@ -124,12 +118,8 @@ describe("Join rooms test", () => {
 
     const roomResult = await createRoom(privateRoom1, user1.data.token);
 
-    const joinRoomResult = await joinRoom(
-      roomResult.data.room.id,
-      user2.data.token
-    );
-
-    expect(joinRoomResult.success).toBeFalsy();
-    expect(joinRoomResult.notifs[0]).toBe("Can't join a private room");
+    await expect(
+      joinRoom(roomResult.data.room.id, user2.data.token)
+    ).rejects.toThrow("Can't join a private room");
   });
 });

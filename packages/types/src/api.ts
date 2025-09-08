@@ -33,3 +33,5 @@ export type CreateRoomData = {
   room: SelectRoom;
   isAdmin: boolean;
 };
+
+export type JoinRoomData = CreateRoomData;

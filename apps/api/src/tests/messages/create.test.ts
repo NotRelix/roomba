@@ -144,7 +144,7 @@ describe("Create message test", () => {
     expect(messageResult2.success).toBeTruthy();
     expect(messageResult2.author.username).toBe(registerUser2.username);
     expect(messageResult2.message.message).toBe(message2.message);
-    expect(joinRoomResult.room.id).toBe(roomResult.data.room.id);
+    expect(joinRoomResult.data.room.id).toBe(roomResult.data.room.id);
   });
 
   it("should prevent sending messages on an invalid room ID (string)", async () => {
