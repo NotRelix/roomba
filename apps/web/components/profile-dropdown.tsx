@@ -32,7 +32,7 @@ export default function ProfileDropDown() {
           <UserRound className="h-4 w-4 dark:stroke-neutral-400" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-24" align="end">
+      <DropdownMenuContent className="w-24 z-[9999]" align="end">
         <DropdownMenuLabel>Guest</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
@@ -48,7 +48,7 @@ export default function ProfileDropDown() {
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>Theme</DropdownMenuSubTrigger>
             <DropdownMenuPortal>
-              <DropdownMenuSubContent>
+              <DropdownMenuSubContent className="z-[9999]">
                 <DropdownMenuItem onClick={() => setTheme("light")}>
                   Light
                 </DropdownMenuItem>

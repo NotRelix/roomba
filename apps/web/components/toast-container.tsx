@@ -1,9 +1,10 @@
-"use client"
+"use client";
 
 import { Bounce, ToastContainer } from "react-toastify";
 import ErrorMessage from "#components/error-message";
 import { useContext } from "react";
 import { MessageContext } from "@repo/ui/providers/message-provider";
+import SuccessMessage from "#components/success-message";
 
 export default function MyToastContainer() {
   const { errors, success } = useContext(MessageContext)!;
@@ -22,6 +23,7 @@ export default function MyToastContainer() {
         transition={Bounce}
       ></ToastContainer>
       <ErrorMessage errors={errors} />
+      <SuccessMessage success={success} />
     </>
   );
 }
