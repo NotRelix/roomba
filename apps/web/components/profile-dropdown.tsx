@@ -18,7 +18,7 @@ import { UserRound } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 
-export function ProfileIcon() {
+export default function ProfileDropDown() {
   const { setTheme } = useTheme();
 
   return (
