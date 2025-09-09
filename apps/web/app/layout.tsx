@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { ThemeProvider } from "#components/theme-provider";
+import { ThemeProvider } from "@repo/ui/providers/theme-provider";
 import Navbar from "#components/navbar";
 import "@repo/ui/globals.css";
 
