@@ -32,8 +32,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
-          {children}
+          <div className="flex min-h-screen flex-col">
+            <Navbar />
+            <main className="bg-gradient flex flex-1 flex-col p-8">
+              {children}
+            </main>
+          </div>
         </ThemeProvider>
       </body>
     </html>
