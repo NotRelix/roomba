@@ -34,7 +34,7 @@ export default function RootLayout({
         >
           <div className="flex min-h-screen flex-col">
             <Navbar />
-            <main className="bg-gradient flex flex-1 flex-col p-8">
+            <main className="bg-gradient flex flex-1 flex-col p-4">
               {children}
             </main>
           </div>
