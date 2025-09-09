@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { Button } from "@repo/ui/components/button";
 import { Input } from "@repo/ui/components/input";
 import { Label } from "@repo/ui/components/label";
@@ -8,6 +8,7 @@ import Link from "next/link";
 import { RegisterType } from "@repo/types/user";
 import type { ApiResponse, RegisterData } from "@repo/types/api";
 import axios from "axios";
+import { MessageContext } from "@repo/ui/providers/message-provider";
 
 const emptyRegisterData = {
   firstName: "",
@@ -20,6 +21,7 @@ const emptyRegisterData = {
 
 export default function Register() {
   const [formData, setFormData] = useState<RegisterType>(emptyRegisterData);
+  const { setErrors } = useContext(MessageContext)!;
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -27,13 +29,12 @@ export default function Register() {
         `${process.env.NEXT_PUBLIC_API_URL!}/auth/register`,
         formData,
       );
-      console.log(data);
     } catch (err) {
       if (!axios.isAxiosError<ApiResponse>(err)) {
         console.error(err);
         return;
       }
-      console.log(err.response?.data.notifs);
+      setErrors(err.response?.data.notifs!);
     }
   };
 
@@ -69,6 +70,7 @@ export default function Register() {
                 type="text"
                 id="firstName"
                 placeholder="Jimmy"
+                required
               />
             </div>
             <div className="flex flex-col gap-3">
@@ -86,6 +88,7 @@ export default function Register() {
                 type="text"
                 id="lastName"
                 placeholder="James"
+                required
               />
             </div>
           </div>
@@ -104,6 +107,7 @@ export default function Register() {
               type="text"
               id="username"
               placeholder="themanwhocantbemoved"
+              required
             />
           </div>
           <div className="flex flex-col gap-3">
@@ -121,6 +125,7 @@ export default function Register() {
               type="email"
               id="email"
               placeholder="theman@email.com"
+              required
             />
           </div>
           <div className="flex flex-col gap-3">
@@ -138,6 +143,7 @@ export default function Register() {
               type="password"
               id="password"
               placeholder="Enter password"
+              required
             />
           </div>
           <div className="flex flex-col gap-3">
@@ -155,6 +161,7 @@ export default function Register() {
               type="password"
               id="confirmPassword"
               placeholder="Enter password again"
+              required
             />
           </div>
           <Button

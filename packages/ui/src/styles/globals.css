@@ -117,6 +117,12 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+.Toastify__toast {
+  color: var(--card-foreground);
+  background-color: var(--background);
+  border: 1px solid var(--border);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -128,7 +134,7 @@
 
 @layer utilities {
   .bg-gradient {
-    background: var(--background);
+    background: var(--card);
     background-attachment: fixed;
   }
 
