@@ -19,9 +19,10 @@ const app = new Hono()
   .post("/", validateCreateRoom, async (c) => {
     try {
       const user = c.var.user;
+      const userId = Number(user.userId);
       const body = c.var.validatedData;
 
-      const createRoomResult = await createRoomDb(user.id, body);
+      const createRoomResult = await createRoomDb(userId, body);
       if (!createRoomResult) {
         return c.json<ApiResponse>(
           { success: false, notifs: ["Failed to create a room"] },
@@ -79,9 +80,10 @@ const app = new Hono()
   .post("/:roomId/join", validateJoinRoom, async (c) => {
     try {
       const user = c.var.user;
+      const userId = Number(user.userId);
       const roomId = c.var.roomId;
 
-      const joinRoomResult = await joinRoomDb(user.id, roomId);
+      const joinRoomResult = await joinRoomDb(userId, roomId);
       if (!joinRoomResult) {
         return c.json<ApiResponse>(
           {

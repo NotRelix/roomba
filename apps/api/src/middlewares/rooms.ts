@@ -13,6 +13,7 @@ const INT_MAX = 2 ** 31 - 1;
 export const validateJoinRoom = createMiddleware<JoinRoomEnv>(
   async (c, next) => {
     const user = c.var.user;
+    const userId = Number(user.userId);
     const roomId = Number(c.req.param("roomId"));
 
     if (roomId >= INT_MAX || isNaN(roomId)) {
@@ -47,7 +48,7 @@ export const validateJoinRoom = createMiddleware<JoinRoomEnv>(
       );
     }
 
-    const isUserJoined = await getUserInRoomDb(user.id, roomId);
+    const isUserJoined = await getUserInRoomDb(userId, roomId);
     if (isUserJoined) {
       return c.json(
         {
@@ -86,6 +87,7 @@ export const validateCreateRoom = createMiddleware<CreateRoomEnv>(
 export const validateEditRoom = createMiddleware<EditRoomEnv>(
   async (c, next) => {
     const user = c.var.user;
+    const userId = Number(user.userId);
     const body = await c.req.json();
     const roomId = Number(c.req.param("roomId"));
     const result = editRoomValidator.safeParse(body);
@@ -121,7 +123,7 @@ export const validateEditRoom = createMiddleware<EditRoomEnv>(
       );
     }
 
-    const isUserJoined = await getUserInRoomDb(user.id, roomId);
+    const isUserJoined = await getUserInRoomDb(userId, roomId);
     if (!isUserJoined) {
       return c.json(
         {
@@ -132,7 +134,7 @@ export const validateEditRoom = createMiddleware<EditRoomEnv>(
       );
     }
 
-    const isAdmin = await isRoomAdminDb(roomId, user.id);
+    const isAdmin = await isRoomAdminDb(roomId, userId);
     if (!isAdmin) {
       return c.json(
         {

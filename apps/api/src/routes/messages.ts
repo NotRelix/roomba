@@ -36,13 +36,14 @@ const app = new Hono()
   .post("/", validateCreateMessage, async (c) => {
     try {
       const user = c.var.user;
+      const userId = Number(user.userId);
       const body = c.var.validatedData;
       const author = c.var.author;
       const roomId = c.var.roomId;
 
       const newMessage: InsertMessage = {
         message: body.message,
-        authorId: user.id,
+        authorId: userId,
         roomId: roomId,
       };
       const createMessageResult = await createMessageDb(newMessage);

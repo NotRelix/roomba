@@ -9,7 +9,7 @@ import { RegisterType } from "@repo/types/user";
 import type { ApiResponse, RegisterData } from "@repo/types/api";
 import axios from "axios";
 import { MessageContext } from "@repo/ui/providers/message-provider";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 const emptyRegisterData = {
   firstName: "",
@@ -23,7 +23,6 @@ const emptyRegisterData = {
 export default function Register() {
   const [formData, setFormData] = useState<RegisterType>(emptyRegisterData);
   const { setErrors, setSuccess } = useContext(MessageContext)!;
-  const router = useRouter();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,8 +31,14 @@ export default function Register() {
         `${process.env.NEXT_PUBLIC_API_URL!}/auth/register`,
         formData,
       );
+
+      if (!data.success) {
+        setErrors(data.notifs);
+        return;
+      }
+
       setSuccess(data.notifs);
-      router.push("/rooms");
+      redirect("/rooms");
     } catch (err) {
       if (!axios.isAxiosError<ApiResponse>(err)) {
         console.error(err);

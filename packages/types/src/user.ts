@@ -20,7 +20,7 @@ export type LoginEnv = {
 };
 
 export type UserPayloadType = {
-  id: number;
+  userId: string;
   sub: string;
   exp: number;
 };

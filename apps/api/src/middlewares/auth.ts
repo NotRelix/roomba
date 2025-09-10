@@ -14,7 +14,7 @@ export const authMiddleware = createMiddleware<UserPayloadEnv>(
       const token = authHeader.split(" ")[1];
       const payload = (await verify(
         token,
-        process.env.JWT_SECRET!
+        process.env.SESSION_SECRET!
       )) as UserPayloadType;
 
       c.set("user", payload);

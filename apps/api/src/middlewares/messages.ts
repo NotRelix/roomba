@@ -24,7 +24,8 @@ export const validateGetMessages = createMiddleware<GetMessagesEnv>(
     }
 
     const user = c.var.user;
-    const isUserJoined = await getUserInRoomDb(user.id, roomId);
+    const userId = Number(user.userId);
+    const isUserJoined = await getUserInRoomDb(userId, roomId);
     if (!isUserJoined) {
       return c.json(
         {
@@ -67,7 +68,8 @@ export const validateCreateMessage = createMiddleware<CreateMessageEnv>(
     }
 
     const user = c.var.user;
-    const author = await getAuthorDb(user.id);
+    const userId = Number(user.userId);
+    const author = await getAuthorDb(userId);
     if (!author) {
       return c.json<ApiResponse>(
         {
@@ -78,7 +80,7 @@ export const validateCreateMessage = createMiddleware<CreateMessageEnv>(
       );
     }
 
-    const isUserJoined = await getUserInRoomDb(user.id, roomId);
+    const isUserJoined = await getUserInRoomDb(userId, roomId);
     if (!isUserJoined) {
       return c.json<ApiResponse>(
         {
