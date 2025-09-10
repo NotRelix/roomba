@@ -9,7 +9,7 @@ import { RegisterType } from "@repo/types/user";
 import type { ApiResponse, RegisterData } from "@repo/types/api";
 import axios from "axios";
 import { MessageContext } from "@repo/ui/providers/message-provider";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const emptyRegisterData = {
   firstName: "",
@@ -24,6 +24,8 @@ export default function Register() {
   const [formData, setFormData] = useState<RegisterType>(emptyRegisterData);
   const { setErrors, setSuccess } = useContext(MessageContext)!;
 
+  const router = useRouter();
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -37,8 +39,9 @@ export default function Register() {
         return;
       }
 
+      localStorage.setItem("token", data.data.token);
       setSuccess(data.notifs);
-      redirect("/rooms");
+      router.push("/");
     } catch (err) {
       if (!axios.isAxiosError<ApiResponse>(err)) {
         console.error(err);
