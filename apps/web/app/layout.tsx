@@ -5,6 +5,7 @@ import Navbar from "#components/navbar";
 import "@repo/ui/globals.css";
 import { MessageProvider } from "@repo/ui/providers/message-provider";
 import MyToastContainer from "#components/toast-container";
+import { AuthProvider } from "@repo/ui/providers/auth";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -35,13 +36,15 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <MessageProvider>
-            <div className="flex min-h-screen flex-col">
-              <Navbar />
-              <main className="bg-gradient flex flex-1 flex-col p-4">
-                <MyToastContainer />
-                {children}
-              </main>
-            </div>
+            <AuthProvider>
+              <div className="flex min-h-screen flex-col">
+                <Navbar />
+                <main className="bg-gradient flex flex-1 flex-col p-4">
+                  <MyToastContainer />
+                  {children}
+                </main>
+              </div>
+            </AuthProvider>
           </MessageProvider>
         </ThemeProvider>
       </body>

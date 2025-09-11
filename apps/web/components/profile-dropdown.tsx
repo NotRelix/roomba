@@ -14,12 +14,14 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@repo/ui/components/dropdown-menu";
+import { useAuth } from "@repo/ui/hooks/auth";
 import { UserRound } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 
 export default function ProfileDropDown() {
   const { setTheme } = useTheme();
+  const { isAuthenticated, username, logout } = useAuth();
 
   return (
     <DropdownMenu>
@@ -32,17 +34,35 @@ export default function ProfileDropDown() {
           <UserRound className="h-4 w-4 dark:stroke-neutral-400" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-24 z-[9999]" align="end">
-        <DropdownMenuLabel>Guest</DropdownMenuLabel>
+      <DropdownMenuContent className="z-[9999] w-24" align="end">
+        {isAuthenticated ? (
+          <DropdownMenuLabel>{username}</DropdownMenuLabel>
+        ) : (
+          <DropdownMenuLabel>Guest</DropdownMenuLabel>
+        )}
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
-            <Link href={"/login"}>Login</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href={"/register"}>Register</Link>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
+        {isAuthenticated ? (
+          <DropdownMenuGroup>
+            <DropdownMenuItem asChild>
+              <Link href={"/"}>Home</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={"/"}>Create Room</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={"/"}>Join Room</Link>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        ) : (
+          <DropdownMenuGroup>
+            <DropdownMenuItem asChild>
+              <Link href={"/login"}>Login</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={"/register"}>Register</Link>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuSub>
@@ -62,6 +82,12 @@ export default function ProfileDropDown() {
             </DropdownMenuPortal>
           </DropdownMenuSub>
         </DropdownMenuGroup>
+        {isAuthenticated && (
+          <DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => logout()}>Logout</DropdownMenuItem>
+          </DropdownMenuGroup>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
