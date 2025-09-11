@@ -319,9 +319,18 @@ importers:
       '@radix-ui/react-slot':
         specifier: ^1.2.3
         version: 1.2.3(@types/react@19.1.0)(react@19.1.0)
+      '@repo/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../types
       '@tailwindcss/postcss':
         specifier: ^4.1.13
         version: 4.1.13
+      axios:
+        specifier: ^1.11.0
+        version: 1.11.0
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
