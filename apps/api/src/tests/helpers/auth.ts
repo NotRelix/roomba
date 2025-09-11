@@ -21,3 +21,15 @@ export const loginUser = async (user: LoginType) => {
   }
   return result;
 };
+
+export const validateUser = async (token: string) => {
+  const response = await client.auth.validate.$get(
+    { json: {} },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  const result = await response.json();
+  if (!result.success) {
+    throw new Error(result.notifs[0]);
+  }
+  return result;
+};

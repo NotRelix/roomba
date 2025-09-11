@@ -1,5 +1,5 @@
-import { SelectMessage, SelectRoom, SelectUser } from "@repo/shared/types";
-import { SafeUser } from "@repo/types/user";
+import { SelectMessage, SelectRoom } from "@repo/shared/types";
+import { SafeUser, UserPayloadType } from "@repo/types/user";
 import { MessageWithAuthor } from "./message.js";
 
 export type ApiSuccess<T = void> = {
@@ -22,6 +22,10 @@ export type LoginData = {
 export type RegisterData = {
   user: SafeUser;
   token: string;
+};
+
+export type ValidatedData = {
+  user: UserPayloadType;
 };
 
 export type CreateRoomData = {

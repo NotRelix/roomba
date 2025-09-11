@@ -2,10 +2,16 @@ import { Hono } from "hono";
 import { genSalt, hash } from "bcrypt-ts";
 import type { InsertUser } from "@repo/shared/types";
 import { registerDb } from "#db/query";
-import type { ApiResponse, LoginData, RegisterData } from "@repo/types/api";
+import type {
+  ApiResponse,
+  LoginData,
+  RegisterData,
+  ValidatedData,
+} from "@repo/types/api";
 import { signToken } from "@repo/helpers/token";
 import { validateRegisterMiddleware } from "#middlewares/register";
 import { validateLoginMiddleware } from "#middlewares/login";
+import { authMiddleware } from "#middlewares/auth";
 
 const app = new Hono()
   .post("/register", validateRegisterMiddleware, async (c) => {
@@ -73,6 +79,29 @@ const app = new Hono()
         {
           success: false,
           notifs: ["Failed to login user"],
+        },
+        500
+      );
+    }
+  })
+  .get("/validate", authMiddleware, async (c) => {
+    try {
+      const user = c.var.user;
+      return c.json<ApiResponse<ValidatedData>>(
+        {
+          success: true,
+          notifs: ["Successfully validated user"],
+          data: {
+            user,
+          },
+        },
+        200
+      );
+    } catch (err) {
+      return c.json<ApiResponse>(
+        {
+          success: false,
+          notifs: ["Failed to validate user"],
         },
         500
       );
