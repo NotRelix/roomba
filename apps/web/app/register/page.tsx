@@ -10,6 +10,7 @@ import type { ApiResponse, RegisterData } from "@repo/types/api";
 import axios from "axios";
 import { MessageContext } from "@repo/ui/providers/message-provider";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@repo/ui/hooks/auth";
 
 const emptyRegisterData = {
   firstName: "",
@@ -23,6 +24,7 @@ const emptyRegisterData = {
 export default function Register() {
   const [formData, setFormData] = useState<RegisterType>(emptyRegisterData);
   const { setErrors, setSuccess } = useContext(MessageContext)!;
+  const { login } = useAuth();
 
   const router = useRouter();
 
@@ -39,7 +41,7 @@ export default function Register() {
         return;
       }
 
-      localStorage.setItem("token", data.data.token);
+      login(data.data.token);
       setSuccess(data.notifs);
       router.push("/");
     } catch (err) {

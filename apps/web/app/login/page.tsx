@@ -10,6 +10,7 @@ import type { ApiResponse, LoginData } from "@repo/types/api";
 import axios from "axios";
 import { MessageContext } from "@repo/ui/providers/message-provider";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@repo/ui/hooks/auth";
 
 const emptyLoginData = {
   firstName: "",
@@ -23,6 +24,7 @@ const emptyLoginData = {
 export default function Login() {
   const [formData, setFormData] = useState<LoginType>(emptyLoginData);
   const { setErrors, setSuccess } = useContext(MessageContext)!;
+  const { login } = useAuth();
 
   const router = useRouter();
 
@@ -39,7 +41,7 @@ export default function Login() {
         return;
       }
 
-      localStorage.setItem("token", data.data.token);
+      login(data.data.token);
       setSuccess(data.notifs);
       router.push("/");
     } catch (err) {

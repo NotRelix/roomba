@@ -8,6 +8,7 @@ import { createContext, type ReactNode, useEffect, useState } from "react";
 export interface AuthContextType {
   isAuthenticated: boolean;
   username: string | undefined;
+  login: (str: string) => void;
   logout: () => void;
 }
 
@@ -21,6 +22,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<UserPayloadType | null>(null);
   const [token, setToken] = useState<string | null>(null);
+
+  const login = (newToken: string) => {
+    localStorage.setItem("token", newToken);
+    setToken(newToken);
+  };
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -61,7 +67,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, username: user?.sub, logout }}
+      value={{ isAuthenticated, username: user?.sub, login, logout }}
     >
       {children}
     </AuthContext.Provider>
