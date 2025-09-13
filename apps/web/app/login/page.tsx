@@ -11,6 +11,7 @@ import axios from "axios";
 import { MessageContext } from "@repo/ui/providers/message-provider";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@repo/ui/hooks/auth";
+import { isNotAuth } from "#components/is-auth";
 
 const emptyLoginData = {
   firstName: "",
@@ -21,7 +22,7 @@ const emptyLoginData = {
   confirmPassword: "",
 };
 
-export default function Login() {
+const Login = () => {
   const [formData, setFormData] = useState<LoginType>(emptyLoginData);
   const { setErrors, setSuccess } = useContext(MessageContext)!;
   const { login } = useAuth();
@@ -116,4 +117,6 @@ export default function Login() {
       </div>
     </div>
   );
-}
+};
+
+export default isNotAuth(Login);
