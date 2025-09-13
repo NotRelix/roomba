@@ -11,6 +11,7 @@ import axios from "axios";
 import { MessageContext } from "@repo/ui/providers/message-provider";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@repo/ui/hooks/auth";
+import { isNotAuth } from "#components/is-auth";
 
 const emptyRegisterData = {
   firstName: "",
@@ -21,7 +22,7 @@ const emptyRegisterData = {
   confirmPassword: "",
 };
 
-export default function Register() {
+const Register = () => {
   const [formData, setFormData] = useState<RegisterType>(emptyRegisterData);
   const { setErrors, setSuccess } = useContext(MessageContext)!;
   const { login } = useAuth();
@@ -190,4 +191,6 @@ export default function Register() {
       </div>
     </div>
   );
-}
+};
+
+export default isNotAuth(Register);
